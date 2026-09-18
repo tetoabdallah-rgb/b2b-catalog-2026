@@ -1,0 +1,26 @@
+{
+  "name": "2B B2B Catalog 2026 | كتالوج التجار والطلبيات",
+  "short_name": "2B Catalog",
+  "description": "كتالوج أسعار الجملة والطلبيات التفاعلي المعتمد لعام 2026 للتجار والموزعين",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
