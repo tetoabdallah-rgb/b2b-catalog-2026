@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2B B2B Portal | كتالوج وأسعار الطلبيات 2026</title>
     
-    <!-- PWA & Mobile Web App Meta -->
+    <!-- PWA Meta -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,6 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="2B Catalog">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -42,13 +43,14 @@
         body {
             background: var(--bg);
             color: var(--text-main);
-            padding-bottom: 100px;
+            padding-bottom: 90px;
+            overflow-x: hidden;
         }
         header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: #ffffff;
-            padding: 14px 18px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 12px 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -60,30 +62,29 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .logo-badge {
             background: var(--orange);
             color: white;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(243, 112, 33, 0.4);
+            box-shadow: 0 2px 6px rgba(243, 112, 33, 0.4);
         }
         .logo-text h1 {
-            font-size: 1.25rem;
+            font-size: 1.18rem;
             font-weight: 800;
             line-height: 1.2;
         }
         .logo-text p {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: #94a3b8;
         }
         .header-actions {
@@ -93,215 +94,107 @@
             flex-wrap: wrap;
         }
         .hdr-btn {
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 7px 12px;
+            border-radius: 9px;
             font-weight: 700;
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            gap: 5px;
             border: none;
+            transition: all 0.15s;
         }
+        .btn-install {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        }
+        .btn-install:hover { transform: translateY(-1px); }
         .mode-toggle-btn {
             background: #334155;
             color: #e2e8f0;
-            border: 1.5px solid #475569;
+            border: 1px solid #475569;
         }
         .mode-toggle-btn.active-client {
             background: #f59e0b;
             color: #0f172a;
-            border-color: #d97706;
             font-weight: 800;
-        }
-        .mobile-share-btn {
-            background: #0284c7;
-            color: white;
-        }
-        .mobile-share-btn:hover { background: #0369a1; }
-        .install-app-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-            display: none; /* Shown if PWA install prompt available */
         }
         .cart-btn {
             background: var(--green);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
         }
-        .cart-btn:hover { background: var(--green-dark); }
         .cart-count {
             background: white;
             color: var(--green-dark);
-            padding: 2px 8px;
+            padding: 1px 7px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 800;
-        }
-
-        /* PWA Install Banner */
-        .pwa-install-banner {
-            display: none;
-            background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
-        }
-        .pwa-install-banner.show {
-            display: flex;
-        }
-        .pwa-banner-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-        .pwa-banner-btn {
-            background: #f59e0b;
-            color: #0f172a;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .pwa-close-btn {
-            background: transparent;
-            color: #94a3b8;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 4px;
         }
 
         .main-container {
             max-width: 1400px;
-            margin: 16px auto;
-            padding: 0 14px;
-        }
-        .client-banner {
-            display: none;
-            background: #fef3c7;
-            border: 1.5px dashed #f59e0b;
-            color: #92400e;
-            padding: 10px 16px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        .sync-success-banner {
-            display: none;
-            background: #dcfce7;
-            border: 1.5px solid #16a34a;
-            color: #166534;
-            padding: 10px 16px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
+            margin: 14px auto;
+            padding: 0 12px;
         }
 
-        /* Grouping Mode Switcher Card */
-        .grouping-control-card {
+        /* Grouping & Brand Tabs Card */
+        .brand-nav-card {
             background: white;
             border: 1.5px solid var(--border);
             border-radius: 14px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .brand-nav-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .grouping-header-info {
-            display: flex;
-            align-items: center;
             gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .grouping-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--navy);
-        }
-        .grouping-sub {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .grouping-btn-group {
+        .mode-switch-group {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             background: #f1f5f9;
-            padding: 4px;
-            border-radius: 10px;
+            padding: 3px;
+            border-radius: 9px;
         }
-        .grp-toggle-btn {
+        .mode-switch-btn {
             border: none;
             background: transparent;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.88rem;
+            padding: 6px 14px;
+            border-radius: 7px;
+            font-size: 0.85rem;
             font-weight: 800;
             color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            transition: all 0.15s;
         }
-        .grp-toggle-btn.active {
+        .mode-switch-btn.active {
             background: var(--navy);
             color: white;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.15);
         }
-        .grp-toggle-btn.active.brand-mode {
+        .mode-switch-btn.active.brand-active {
             background: linear-gradient(135deg, #f37021 0%, #c2410c 100%);
             color: white;
-            box-shadow: 0 2px 8px rgba(243, 112, 33, 0.3);
+            box-shadow: 0 2px 6px rgba(243, 112, 33, 0.3);
         }
 
-        /* Brand Explorer Pills Section */
-        .brand-explorer-box {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-        .brand-explorer-hdr {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .brand-explorer-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--navy);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        /* Horizontal Brand Pills Bar */
         .brand-pills-bar {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding: 4px 2px 8px 2px;
             scrollbar-width: thin;
         }
         .brand-pill {
@@ -317,7 +210,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s;
+            transition: all 0.15s;
+            user-select: none;
         }
         .brand-pill:hover {
             background: #f1f5f9;
@@ -327,7 +221,7 @@
             background: var(--orange);
             color: white;
             border-color: #ea580c;
-            box-shadow: 0 2px 6px rgba(243, 112, 33, 0.25);
+            box-shadow: 0 2px 8px rgba(243, 112, 33, 0.3);
         }
         .brand-pill-count {
             background: rgba(0,0,0,0.08);
@@ -340,104 +234,74 @@
             color: white;
         }
 
-        /* Department Explorer Grid */
-        .departments-explorer-wrap {
-            margin-bottom: 20px;
+        /* Department Pills (when in category mode) */
+        .dept-pills-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 8px 2px;
+            scrollbar-width: thin;
         }
-        .dept-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            gap: 10px;
-        }
-        .dept-card {
-            background: white;
+        .dept-pill {
+            padding: 7px 14px;
+            border-radius: 20px;
+            background: #f8fafc;
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 700;
             border: 1.5px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 14px;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-        .dept-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.1);
-        }
-        .dept-card.active {
-            background: #f0f9ff;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
-        }
-        .dept-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-        .dept-icon { font-size: 1.6rem; }
-        .dept-badge {
-            background: #f1f5f9;
-            color: var(--navy);
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-        .dept-title {
-            font-size: 0.92rem;
-            font-weight: 800;
-            color: var(--navy);
-            margin-bottom: 2px;
-        }
-        .dept-sub {
-            font-size: 0.74rem;
-            color: var(--text-muted);
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .dept-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
         }
 
         /* Filter Panel */
         .filter-panel {
             background: var(--card-bg);
-            padding: 14px;
+            padding: 12px 14px;
             border-radius: 14px;
             border: 1px solid var(--border);
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             position: sticky;
-            top: 70px;
+            top: 62px;
             z-index: 90;
         }
         .search-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .search-input-wrap {
             flex: 2;
-            min-width: 220px;
+            min-width: 200px;
             position: relative;
             display: flex;
             align-items: center;
         }
         .search-input {
             width: 100%;
-            padding: 10px 14px 10px 36px;
+            padding: 9px 12px 9px 32px;
             border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.92rem;
+            border-radius: 9px;
+            font-size: 0.9rem;
             outline: none;
             transition: border-color 0.2s;
         }
         .search-input:focus { border-color: var(--primary); }
         .clear-search-btn {
             position: absolute;
-            left: 10px;
+            left: 8px;
             background: #e2e8f0;
             border: none;
             border-radius: 50%;
@@ -452,24 +316,24 @@
         }
         .select-filter {
             flex: 1;
-            min-width: 135px;
-            padding: 10px 12px;
+            min-width: 130px;
+            padding: 9px 10px;
             border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.88rem;
+            border-radius: 9px;
+            font-size: 0.86rem;
             outline: none;
             background: white;
             cursor: pointer;
         }
-        .view-toggles { display: flex; gap: 6px; }
+        .view-toggles { display: flex; gap: 4px; }
         .view-btn {
-            padding: 8px 12px;
+            padding: 7px 11px;
             border: 1px solid var(--border);
             background: white;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
         .view-btn.active {
             background: var(--navy);
@@ -478,22 +342,20 @@
         }
         .quick-deals-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding-bottom: 4px;
             scrollbar-width: thin;
         }
         .deal-btn {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
             border: 1px solid var(--border);
             background: white;
             color: var(--text-main);
             white-space: nowrap;
-            transition: all 0.2s;
         }
         .deal-btn.active {
             background: #0f172a;
@@ -501,88 +363,105 @@
             border-color: #0f172a;
         }
 
-        /* Section Containers */
-        .category-section-block {
-            margin-bottom: 34px;
+        /* Current Active Filter Badge Bar */
+        .filter-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .filter-badge-item {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Brand & Category Section Headers */
+        .brand-section-header {
+            background: linear-gradient(135deg, #c2410c 0%, #f37021 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.2);
         }
         .cat-section-header {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
-            padding: 12px 18px;
-            border-radius: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
             margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
         }
-        .brand-section-header {
-            background: linear-gradient(135deg, #c2410c 0%, #f37021 100%);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 14px;
-            margin-bottom: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.2);
-        }
         .sec-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+        .sec-count-badge {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-weight: 800;
+            padding: 2px 9px;
+            border-radius: 16px;
+            font-size: 0.78rem;
         }
         .sec-meta {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: #e2e8f0;
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
-        }
-        .sec-count {
-            background: rgba(255,255,255,0.25);
-            color: white;
-            font-weight: 800;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
         }
 
         /* Products Grid */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .product-card {
             background: var(--card-bg);
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.15s, box-shadow 0.15s;
         }
         .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
             border-color: #cbd5e1;
         }
         .card-img-wrap {
-            height: 160px;
+            height: 150px;
             background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 8px;
             position: relative;
             border-bottom: 1px solid #f1f5f9;
             cursor: pointer;
@@ -591,40 +470,38 @@
             max-height: 100%;
             max-width: 100%;
             object-fit: contain;
-            transition: transform 0.2s;
         }
-        .card-img-wrap:hover img { transform: scale(1.04); }
         .card-brand-badge {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             background: rgba(15, 23, 42, 0.85);
             color: white;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 6px;
         }
         .card-body {
-            padding: 12px 14px;
+            padding: 10px 12px;
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
         .card-code {
-            font-size: 0.76rem;
+            font-size: 0.74rem;
             font-weight: 800;
             color: var(--primary-dark);
             letter-spacing: 0.5px;
         }
         .card-title {
-            font-size: 0.86rem;
+            font-size: 0.84rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.35;
-            margin: 4px 0 10px 0;
-            height: 44px;
+            margin: 3px 0 8px 0;
+            height: 42px;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -632,38 +509,38 @@
         }
         .prices-box {
             background: #f8fafc;
-            border-radius: 10px;
-            padding: 8px 10px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            padding: 6px 8px;
+            margin-bottom: 8px;
         }
         .price-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
-            font-size: 0.8rem;
+            margin-bottom: 2px;
+            font-size: 0.78rem;
         }
         .price-row.dealer {
-            font-size: 0.96rem;
+            font-size: 0.94rem;
             font-weight: 800;
             color: var(--primary-dark);
             border-top: 1px dashed var(--border);
-            padding-top: 6px;
-            margin-top: 4px;
+            padding-top: 4px;
+            margin-top: 3px;
         }
         .price-row.client-main {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 900;
             color: #0f172a;
             border: none;
-            padding: 4px 0;
+            padding: 2px 0;
         }
         .profit-pill {
             background: #fef3c7;
             color: #92400e;
-            padding: 2px 7px;
-            border-radius: 6px;
-            font-size: 0.74rem;
+            padding: 1px 6px;
+            border-radius: 5px;
+            font-size: 0.72rem;
             font-weight: 800;
         }
 
@@ -677,29 +554,28 @@
             display: flex;
             align-items: center;
             border: 1.5px solid var(--border);
-            border-radius: 8px;
+            border-radius: 7px;
             background: white;
             overflow: hidden;
         }
         .qty-btn {
-            width: 28px;
-            height: 34px;
+            width: 26px;
+            height: 32px;
             background: #f8fafc;
             border: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: var(--navy);
             cursor: pointer;
-            transition: background 0.15s;
         }
         .qty-btn:active { background: #e2e8f0; }
         .order-qty-input {
-            width: 40px;
-            height: 34px;
+            width: 36px;
+            height: 32px;
             border: none;
             text-align: center;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             outline: none;
             color: var(--navy);
         }
@@ -708,59 +584,76 @@
             background: var(--navy);
             color: white;
             border: none;
-            height: 36px;
-            border-radius: 8px;
+            height: 34px;
+            border-radius: 7px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
         }
         .add-cart-btn:hover { background: var(--primary); }
-        .add-cart-btn:active { transform: scale(0.98); }
 
         /* Table View */
         .products-table-wrap {
             display: none;
             background: var(--card-bg);
-            border-radius: 14px;
+            border-radius: 12px;
             overflow-x: auto;
             border: 1px solid var(--border);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             margin-bottom: 20px;
         }
         .prod-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.86rem;
+            font-size: 0.85rem;
             text-align: right;
             white-space: nowrap;
         }
         .prod-table th {
             background: #0f172a;
             color: white;
-            padding: 10px 12px;
+            padding: 9px 12px;
             font-weight: 800;
-            position: sticky;
-            top: 0;
         }
         .prod-table td {
-            padding: 8px 12px;
+            padding: 7px 12px;
             border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
-        .prod-table tr:hover { background: #f8fafc; }
         .tbl-thumb {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             object-fit: contain;
             border-radius: 6px;
             border: 1px solid var(--border);
             background: white;
+        }
+
+        /* Load More Button */
+        .load-more-wrap {
+            text-align: center;
+            padding: 16px;
+        }
+        .load-more-btn {
+            background: white;
+            border: 1.5px solid var(--border);
+            padding: 10px 28px;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--navy);
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: all 0.15s;
+        }
+        .load-more-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
 
         /* Mobile Bottom Nav */
@@ -770,10 +663,10 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(10px);
             border-top: 1px solid #334155;
-            padding: 6px 12px 10px 12px;
+            padding: 5px 8px 8px 8px;
             z-index: 1000;
             justify-content: space-around;
             align-items: center;
@@ -785,52 +678,47 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
-            font-size: 0.72rem;
+            gap: 2px;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
             position: relative;
-            padding: 4px 8px;
-            transition: color 0.2s;
+            padding: 3px 6px;
         }
         .mob-nav-item.active { color: #38bdf8; }
-        .mob-nav-icon { font-size: 1.35rem; }
+        .mob-nav-icon { font-size: 1.25rem; }
         .mob-badge {
             position: absolute;
             top: -2px;
             right: 4px;
             background: var(--orange);
             color: white;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 800;
             padding: 1px 5px;
             border-radius: 10px;
         }
 
-        /* Floating Mobile Cart Bar */
+        /* Floating Cart Bar */
         .floating-cart-bar {
             display: none;
             position: fixed;
-            bottom: 64px;
-            left: 14px;
-            right: 14px;
+            bottom: 58px;
+            left: 12px;
+            right: 12px;
             background: linear-gradient(135deg, #10b981 0%, #047857 100%);
             color: white;
-            padding: 10px 16px;
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+            padding: 9px 14px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
             z-index: 990;
             align-items: center;
             justify-content: space-between;
             font-weight: 800;
+            font-size: 0.88rem;
             cursor: pointer;
-            animation: slideUp 0.25s ease-out;
         }
         .floating-cart-bar.show { display: flex; }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
 
         /* Modals */
         .modal-overlay {
@@ -842,28 +730,23 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 14px;
         }
         .modal-content {
             background: white;
             width: 100%;
-            max-width: 650px;
+            max-width: 600px;
             max-height: 90vh;
             border-radius: 16px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-            animation: modalPop 0.2s ease-out;
-        }
-        @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
         .modal-header {
             background: #0f172a;
             color: white;
-            padding: 14px 18px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -875,62 +758,52 @@
         }
         .modal-footer {
             background: #f8fafc;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-top: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         .cart-item-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 8px 0;
             border-bottom: 1px solid #f1f5f9;
-            gap: 10px;
+            gap: 8px;
         }
         .cart-summary-box {
             background: #f1f5f9;
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 10px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            font-size: 0.85rem;
+            gap: 6px;
+            font-size: 0.82rem;
         }
-        .cart-summary-item strong { color: var(--navy); }
 
-        /* QR Share Modal specifics */
-        .qr-card {
-            text-align: center;
-            padding: 10px 0;
-        }
-        .qr-img {
-            width: 200px;
-            height: 200px;
-            border: 2px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 8px;
-            background: white;
-            margin: 10px auto;
-        }
-        .link-copy-box {
-            display: flex;
-            gap: 8px;
-            margin: 12px 0;
-        }
-        .link-input {
-            flex: 1;
-            padding: 10px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            direction: ltr;
-            text-align: left;
+        /* Install Guide Modal */
+        .guide-step-card {
             background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .guide-step-card h4 {
+            color: var(--navy);
+            font-size: 0.92rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .guide-step-card p {
+            font-size: 0.82rem;
+            color: #475569;
+            line-height: 1.5;
         }
 
-        /* Toast notification */
         .toast-msg {
             position: fixed;
             top: 20px;
@@ -938,23 +811,22 @@
             transform: translateX(-50%);
             background: #0f172a;
             color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.86rem;
             font-weight: 700;
             z-index: 3000;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
             display: none;
         }
 
         @media (max-width: 768px) {
             .mobile-bottom-nav { display: flex; }
-            .dept-cards-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
-            .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
-            .card-img-wrap { height: 130px; }
-            .card-title { font-size: 0.8rem; height: 38px; }
-            .filter-panel { top: 60px; padding: 10px; }
-            body { padding-bottom: 120px; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+            .card-img-wrap { height: 125px; }
+            .card-title { font-size: 0.78rem; height: 36px; }
+            .filter-panel { top: 56px; padding: 8px; }
+            body { padding-bottom: 110px; }
         }
     </style>
 </head>
@@ -972,17 +844,17 @@
             </div>
         </div>
         <div class="header-actions">
-            <button id="btnMobileShare" class="hdr-btn mobile-share-btn" onclick="openShareModal()">
-                📱 فتح على الموبايل (QR)
-            </button>
-            <button id="btnPwaInstall" class="hdr-btn install-app-btn" onclick="triggerPwaInstall()">
+            <button class="hdr-btn btn-install" onclick="openInstallModal()">
                 📲 تثبيت التطبيق
             </button>
-            <button id="btnModeToggle" class="hdr-btn mode-toggle-btn" onclick="togglePresentationMode()">
-                👁️ وضع العرض للزبون
+            <button class="hdr-btn" style="background:#0284c7; color:white;" onclick="openShareModal()">
+                📱 مشاركة (QR)
             </button>
-            <label class="hdr-btn" style="background:#475569; color:white; cursor:pointer;" title="تحديث مباشر من شيت إكسيل جديد">
-                🔄 تحديث
+            <button id="btnModeToggle" class="hdr-btn mode-toggle-btn" onclick="togglePresentationMode()">
+                👁️ وضع الزبون
+            </button>
+            <label class="hdr-btn" style="background:#475569; color:white; cursor:pointer;" title="تحديث مباشر من شيت إكسيل">
+                🔄 إكسيل
                 <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display:none;" onchange="handleExcelUpload(event)">
             </label>
             <button class="hdr-btn cart-btn" onclick="openCartModal()">
@@ -993,70 +865,35 @@
 </header>
 
 <div class="main-container">
-    <!-- PWA Install Banner -->
-    <div id="pwaBanner" class="pwa-install-banner">
-        <div class="pwa-banner-text">
-            <span style="font-size:1.5rem;">📲</span>
-            <span>تطبيق كتالوج 2B جاهز للعمل على موبايلك! ثبته الآن للوصول السريع بدون إنترنت.</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <button class="pwa-banner-btn" onclick="triggerPwaInstall()">تثبيت التطبيق الآن</button>
-            <button class="pwa-close-btn" onclick="dismissPwaBanner()">✕</button>
-        </div>
+    <div id="clientBanner" style="display:none; background:#fef3c7; border:1px dashed #f59e0b; color:#92400e; padding:8px 12px; border-radius:10px; margin-bottom:12px; font-weight:700; font-size:0.86rem; text-align:center;">
+        👁️ وضع عرض المستهلك مفعل (تم إخفاء أسعار التاجر وهوامش الربح للحفاظ على الخصوصية).
     </div>
 
-    <!-- Banners -->
-    <div id="clientBanner" class="client-banner">
-        👁️ وضع العرض للمستهلك مفعل حالياً (تم إخفاء أسعار التاجر وهوامش الربح للحفاظ على الخصوصية).
-    </div>
-    <div id="syncSuccessBanner" class="sync-success-banner"></div>
-
-    <!-- Grouping Mode Switcher Card -->
-    <div class="grouping-control-card">
-        <div class="grouping-header-info">
-            <span style="font-size: 1.4rem;">⚙️</span>
-            <div>
-                <div class="grouping-title">نظام ترتيب وعرض الكتالوج:</div>
-                <div class="grouping-sub">اختر هل تريد تصفح الأصناف مجمعة حسب الأقسام أو مفصولة لكل براند على حدة</div>
+    <!-- Navigation & Grouping Card -->
+    <div class="brand-nav-card">
+        <div class="brand-nav-header">
+            <div style="font-weight:800; font-size:0.95rem; color:var(--navy); display:flex; align-items:center; gap:6px;">
+                <span>⚙️</span>
+                <span>نظام التصفح:</span>
+            </div>
+            <div class="mode-switch-group">
+                <button id="btnModeBrand" class="mode-switch-btn active brand-active" onclick="switchMainGrouping('brands')">
+                    🏷️ ترتيب البراندات لوحدها
+                </button>
+                <button id="btnModeCategory" class="mode-switch-btn" onclick="switchMainGrouping('categories')">
+                    📂 ترتيب بالأقسام
+                </button>
             </div>
         </div>
-        <div class="grouping-btn-group">
-            <button id="grpBtnCategories" class="grp-toggle-btn active" onclick="setGroupingMode('categories')">
-                📂 ترتيب حسب الأقسام
-            </button>
-            <button id="grpBtnBrands" class="grp-toggle-btn" onclick="setGroupingMode('brands')">
-                🏷️ ترتيب البراندات لوحدها
-            </button>
-        </div>
+
+        <!-- Brand Pills Bar (Instant Brand Jump) -->
+        <div id="brandPillsBar" class="brand-pills-bar"></div>
+
+        <!-- Category Pills Bar (Shown when in Category mode) -->
+        <div id="deptPillsBar" class="dept-pills-bar" style="display:none;"></div>
     </div>
 
-    <!-- Brand Explorer Bar -->
-    <div class="brand-explorer-box">
-        <div class="brand-explorer-hdr">
-            <div class="brand-explorer-title">
-                <span>🏷️</span>
-                <span>مستكشف الماركات العالمية (اختر أي براند لعرض منتجاته فوراً):</span>
-            </div>
-            <button onclick="resetBrandFilter()" style="border:none; background:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">
-                عرض الكل
-            </button>
-        </div>
-        <div id="brandPillsBar" class="brand-pills-bar">
-            <!-- Populated dynamically -->
-        </div>
-    </div>
-
-    <!-- Department Explorer Grid (Shown in category mode) -->
-    <div id="departmentsExplorerWrap" class="departments-explorer-wrap">
-        <div style="font-size:1rem; font-weight:800; color:var(--navy); margin-bottom:10px;">
-            📂 الأقسام الرئيسية المتاحة:
-        </div>
-        <div id="deptCardsGrid" class="dept-cards-grid">
-            <!-- Populated dynamically -->
-        </div>
-    </div>
-
-    <!-- Filter Panel -->
+    <!-- Filter & Search Panel -->
     <div class="filter-panel">
         <div class="search-row">
             <div class="search-input-wrap">
@@ -1066,14 +903,13 @@
             <select id="brandSelect" class="select-filter" onchange="onBrandSelectChange(this.value)">
                 <option value="">جميع الماركات</option>
             </select>
-            <select id="sortSelect" class="select-filter" onchange="filterProducts()">
+            <select id="sortSelect" class="select-filter" onchange="applyFiltersAndRender()">
                 <option value="default">الترتيب الافتراضي</option>
                 <option value="brand_asc">🏷️ الماركة: أبجدياً (A - Z)</option>
                 <option value="brand_desc">🏷️ الماركة: عكسي (Z - A)</option>
-                <option value="brand_count">📊 الماركة: الأكثر أصنافاً أولاً</option>
-                <option value="profit_high">💰 نسبة ربح التاجر: الأعلى أولاً</option>
-                <option value="price_asc">💵 سعر التاجر: من الأقل للأعلى</option>
-                <option value="price_desc">💎 سعر التاجر: من الأعلى للأقل</option>
+                <option value="profit_high">💰 نسبة الربح: الأعلى أولاً</option>
+                <option value="price_asc">💵 السعر: من الأقل للأعلى</option>
+                <option value="price_desc">💎 السعر: من الأعلى للأقل</option>
                 <option value="name_asc">🔤 اسم الصنف (أ - ي)</option>
             </select>
             <div class="view-toggles">
@@ -1083,34 +919,42 @@
         </div>
         <div class="quick-deals-row">
             <button class="deal-btn active" onclick="setDealFilter('ALL', this)">🌟 جميع الأصناف</button>
-            <button class="deal-btn wholesale-only" onclick="setDealFilter('HIGH_MARGIN', this)">🔥 أرباح مرتفعة (+30%)</button>
+            <button class="deal-btn wholesale-only" onclick="setDealFilter('HIGH_MARGIN', this)">🔥 ربح عالي (+30%)</button>
             <button class="deal-btn" onclick="setDealFilter('UNDER_500', this)">⚡ أقل من 500 ج.م</button>
             <button class="deal-btn" onclick="setDealFilter('PREMIUM', this)">⭐ أصناف مميزة (+2000 ج.م)</button>
         </div>
     </div>
 
-    <!-- Catalog Content Container -->
+    <!-- Active Filter Status -->
+    <div class="filter-status-bar">
+        <div id="filterStatusText">جاري تحميل الأصناف...</div>
+        <div id="resetFiltersBtn" style="display:none; cursor:pointer; color:var(--primary); font-weight:700;" onclick="resetAllFilters()">
+            إلغاء الفلتر ✕
+        </div>
+    </div>
+
+    <!-- Catalog Content -->
     <div id="catalogContentContainer"></div>
+
+    <!-- Load More Button Wrap -->
+    <div id="loadMoreWrap" class="load-more-wrap" style="display:none;">
+        <button class="load-more-btn" onclick="loadMoreItems()">
+            ⬇️ عرض المزيد من الأصناف (<span id="remainingCount">0</span> متبقي)
+        </button>
+    </div>
 </div>
 
 <!-- Floating Mobile Cart Bar -->
 <div id="floatingCartBar" class="floating-cart-bar" onclick="openCartModal()">
-    <div style="display:flex; align-items:center; gap:8px;">
-        <span style="font-size:1.3rem;">🛒</span>
-        <span id="floatingCartText">0 صنف | 0 ج.م</span>
-    </div>
-    <div>إنهاء الطلب ➔</div>
+    <span id="floatingCartText">🛒 0 صنف | 0 ج.م</span>
+    <span>إنهاء الطلب ➔</span>
 </div>
 
 <!-- Mobile Bottom Navigation Bar -->
 <div class="mobile-bottom-nav">
-    <button class="mob-nav-item active" onclick="navToHome()">
-        <span class="mob-nav-icon">🏠</span>
-        <span>الكتالوج</span>
-    </button>
-    <button class="mob-nav-item" onclick="navToBrands()">
+    <button class="mob-nav-item active" onclick="navToBrands()">
         <span class="mob-nav-icon">🏷️</span>
-        <span>الماركات</span>
+        <span>البراندات</span>
     </button>
     <button class="mob-nav-item" onclick="navToCategories()">
         <span class="mob-nav-icon">📂</span>
@@ -1120,6 +964,10 @@
         <span class="mob-nav-icon">🛒</span>
         <span>السلة</span>
         <span id="mobCartBadge" class="mob-badge" style="display:none;">0</span>
+    </button>
+    <button class="mob-nav-item" onclick="openInstallModal()">
+        <span class="mob-nav-icon">📲</span>
+        <span>تثبيت</span>
     </button>
     <button class="mob-nav-item" onclick="togglePresentationMode()">
         <span class="mob-nav-icon">👁️</span>
@@ -1131,11 +979,11 @@
 <div id="cartModal" class="modal-overlay" onclick="if(event.target===this) closeCartModal()">
     <div class="modal-content">
         <div class="modal-header">
-            <div style="font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+            <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
                 <span>🛒</span>
                 <span>سلة طلبيات التاجر</span>
             </div>
-            <button onclick="closeCartModal()" style="background:none; border:none; color:white; font-size:1.3rem; cursor:pointer;">✕</button>
+            <button onclick="closeCartModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
         <div class="modal-body">
             <div id="cartItemsList"></div>
@@ -1160,16 +1008,16 @@
                 </div>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="sendWhatsAppOrder()" style="flex:2; background:#25d366; color:white; border:none; padding:12px; border-radius:10px; font-weight:800; font-size:0.95rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                <button onclick="sendWhatsAppOrder()" style="flex:2; background:#25d366; color:white; border:none; padding:11px; border-radius:9px; font-weight:800; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
                     💬 إرسال الطلبية عبر واتساب
                 </button>
-                <button onclick="printQuotation()" style="flex:1; background:#0f172a; color:white; border:none; padding:12px; border-radius:10px; font-weight:700; cursor:pointer;">
+                <button onclick="printQuotation()" style="flex:1; background:#0f172a; color:white; border:none; padding:11px; border-radius:9px; font-weight:700; cursor:pointer;">
                     📄 طباعة عرض أسعار
                 </button>
-                <button onclick="exportCartExcel()" style="flex:1; background:#0284c7; color:white; border:none; padding:12px; border-radius:10px; font-weight:700; cursor:pointer;">
-                    📥 شيت إكسيل
+                <button onclick="exportCartExcel()" style="flex:1; background:#0284c7; color:white; border:none; padding:11px; border-radius:9px; font-weight:700; cursor:pointer;">
+                    📥 إكسيل
                 </button>
-                <button onclick="clearCart()" style="background:#fee2e2; color:#ef4444; border:none; padding:12px; border-radius:10px; font-weight:700; cursor:pointer;">
+                <button onclick="clearCart()" style="background:#fee2e2; color:#ef4444; border:none; padding:11px; border-radius:9px; font-weight:700; cursor:pointer;">
                     🗑️
                 </button>
             </div>
@@ -1177,45 +1025,79 @@
     </div>
 </div>
 
-<!-- QR Code & Share Modal -->
-<div id="shareModal" class="modal-overlay" onclick="if(event.target===this) closeShareModal()">
-    <div class="modal-content" style="max-width:480px;">
+<!-- Install Guide Modal (Laptop & Mobile) -->
+<div id="installModal" class="modal-overlay" onclick="if(event.target===this) closeInstallModal()">
+    <div class="modal-content" style="max-width:500px;">
         <div class="modal-header">
             <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
-                <span>📱</span>
-                <span>فتح التطبيق على الموبايل والعمل من أي مكان</span>
+                <span>📲</span>
+                <span>تثبيت التطبيق على اللابتوب أو الموبايل</span>
             </div>
-            <button onclick="closeShareModal()" style="background:none; border:none; color:white; font-size:1.3rem; cursor:pointer;">✕</button>
+            <button onclick="closeInstallModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
         <div class="modal-body">
-            <div class="qr-card">
-                <p style="font-size:0.88rem; color:#475569; margin-bottom:8px;">امسح الباركود بكاميرا الموبايل لفتح الكتالوج والطلب فوراً:</p>
-                <img id="shareQrImg" class="qr-img" src="" alt="QR Code">
-                <div class="link-copy-box">
-                    <input type="text" id="shareUrlInput" class="link-input" readonly>
-                    <button onclick="copyShareUrl()" style="background:var(--navy); color:white; border:none; padding:0 14px; border-radius:8px; font-weight:700; cursor:pointer;">
-                        نسخ
-                    </button>
-                </div>
-                <div style="display:flex; gap:8px; margin-top:12px;">
-                    <button onclick="shareViaWhatsApp()" style="flex:1; background:#25d366; color:white; border:none; padding:10px; border-radius:8px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
-                        💬 مشاركة الرابط للتجار عبر واتساب
-                    </button>
-                </div>
-                <div style="background:#f8fafc; border-radius:10px; padding:12px; margin-top:14px; text-align:right; font-size:0.8rem; color:#64748b; line-height:1.6;">
-                    <strong style="color:var(--navy); display:block; margin-bottom:4px;">💡 كيفية تثبيت الكتالوج كتطبيق على الموبايل:</strong>
-                    • <strong>على الأندرويد (Chrome):</strong> اضغط على القائمة (⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>
-                    • <strong>على الآيفون (Safari):</strong> اضغط على زر المشاركة (Share) بالأسفل ثم اختر "إضافة إلى الصفحة الرئيسية (Add to Home Screen)".
-                </div>
+            <div id="nativeInstallPromptBox" style="display:none; text-align:center; padding:12px; background:#dcfce7; border:1.5px solid #16a34a; border-radius:12px; margin-bottom:14px;">
+                <div style="font-weight:800; color:#166534; font-size:1rem; margin-bottom:6px;">🎉 جهازك يدعم التثبيت المباشر بنقرة واحدة!</div>
+                <button onclick="executePwaInstall()" style="background:#16a34a; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:800; cursor:pointer; font-size:0.95rem;">
+                    📲 تثبيت الكتالوج الآن كبرنامج
+                </button>
+            </div>
+
+            <div class="guide-step-card">
+                <h4>💻 التثبيت على الكمبيوتر أو اللابتوب (Chrome / Edge)</h4>
+                <p>
+                    1. انظر إلى <strong>شريط عنوان المتصفح (Address Bar)</strong> بأعلى الشاشة.<br>
+                    2. ستجد أيقونة صغيرة تشبه الشاشة أو علامة <strong>(⊕ أو 💻 تثبيت)</strong> بجانب النجمة أو رابط الموقع.<br>
+                    3. اضغط عليها واختر <strong>تثبيت (Install)</strong> -> سيفتح الكتالوج كنافذة تطبيق مستقلة بدون شريط المتصفح وتظهر أيقونته على سطح المكتب!
+                </p>
+            </div>
+
+            <div class="guide-step-card">
+                <h4>📱 التثبيت على هواتف أندرويد (Google Chrome)</h4>
+                <p>
+                    1. اضغط على زر القائمة <strong>(الثلاث نقاط ⋮)</strong> بأعلى يسار المتصفح.<br>
+                    2. اختر من القائمة <strong>"تثبيت التطبيق (Install App)"</strong> أو <strong>"إضافة إلى الشاشة الرئيسية"</strong>.<br>
+                    3. سيتم تثبيت الكتالوج كأيقونة تطبيق كاملة على هاتفك.
+                </p>
+            </div>
+
+            <div class="guide-step-card">
+                <h4>🍏 التثبيت على هواتف آيفون (Apple Safari)</h4>
+                <p>
+                    1. افتح الرابط في متصفح <strong>Safari</strong>.<br>
+                    2. اضغط على زر المشاركة <strong>(مربع وسهم للأعلى ⎋)</strong> في أسفل الشاشة.<br>
+                    3. انزل لأسفل واختر <strong>"إضافة إلى الصفحة الرئيسية (Add to Home Screen)"</strong>.
+                </p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Image Lightbox Modal -->
+<!-- QR Share Modal -->
+<div id="shareModal" class="modal-overlay" onclick="if(event.target===this) closeShareModal()">
+    <div class="modal-content" style="max-width:440px;">
+        <div class="modal-header">
+            <div style="font-weight:800; font-size:1.05rem;">📱 مشاركة الكتالوج للتجار</div>
+            <button onclick="closeShareModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="text-align:center;">
+            <p style="font-size:0.86rem; color:#475569; margin-bottom:8px;">امسح الباركود بكاميرا الموبايل لفتح الكتالوج فوراً:</p>
+            <img id="shareQrImg" style="width:190px; height:190px; border:2px solid #cbd5e1; border-radius:12px; padding:6px; background:white; margin:8px auto; display:block;" src="" alt="QR">
+            <div style="display:flex; gap:6px; margin:10px 0;">
+                <input type="text" id="shareUrlInput" style="flex:1; padding:9px; border:1.5px solid var(--border); border-radius:8px; font-size:0.82rem; direction:ltr; background:#f8fafc;" readonly>
+                <button onclick="copyShareUrl()" style="background:var(--navy); color:white; border:none; padding:0 14px; border-radius:8px; font-weight:700; cursor:pointer;">نسخ</button>
+            </div>
+            <button onclick="shareViaWhatsApp()" style="width:100%; background:#25d366; color:white; border:none; padding:10px; border-radius:8px; font-weight:800; cursor:pointer; margin-top:6px;">
+                💬 إرسال الرابط عبر واتساب للتجار
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Image Lightbox -->
 <div id="imgModal" class="modal-overlay" onclick="closeImgModal()" style="z-index:3500;">
     <div style="position:relative; max-width:90vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
-        <img id="lightboxImg" src="" style="max-width:100%; max-height:85vh; border-radius:14px; background:white; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+        <img id="lightboxImg" src="" style="max-width:100%; max-height:85vh; border-radius:14px; background:white; padding:10px;">
     </div>
 </div>
 
@@ -1238,39 +1120,53 @@ function showToast(msg) {
     const el = document.getElementById('toastMsg');
     el.textContent = msg;
     el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 2600);
+    setTimeout(() => { el.style.display = 'none'; }, 2400);
 }
 
+// Global Products Data & Product Index Lookup
+let products = [];
+let productByCode = {};
+let brandCountsCache = {};
+let categoryCountsCache = {};
+
+try {
+    const rawJson = document.getElementById('catalogData').textContent;
+    products = JSON.parse(rawJson);
+    products.forEach(p => {
+        productByCode[p.code] = p;
+        const b = (p.brand || 'Generic').trim();
+        brandCountsCache[b] = (brandCountsCache[b] || 0) + 1;
+        const c = (p.category_en || 'Other Accessories').trim();
+        categoryCountsCache[c] = (categoryCountsCache[c] || 0) + 1;
+    });
+} catch(e) {
+    console.error('Failed to parse products JSON:', e);
+}
+
+// Lightweight Image Fallback without bloating DOM attributes!
 function handleDynamicImageError(img) {
     if (!img) return;
     const code = (img.getAttribute('data-code') || '').trim();
-    const normCode = code.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
     const brand = (img.getAttribute('data-brand') || '').trim();
     const cleanBrand = brand.replace(/[^A-Za-z0-9]/g, '_');
-    const fallback = img.getAttribute('data-fallback') || '';
+    const normCode = code.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
     let step = parseInt(img.getAttribute('data-step') || '0', 10);
-    
     step++;
     img.setAttribute('data-step', step);
-    
+
+    const prod = productByCode[code];
+    const fallbackBase64 = prod ? (prod.img || '') : '';
+
     const candidates = [
         `product_images/${encodeURIComponent(code)}.jpg`,
         `product_images/${encodeURIComponent(code)}.png`,
-        `product_images/${encodeURIComponent(code)}.jpeg`,
-        `product_images/${encodeURIComponent(code)}.webp`,
-        `product_images/${encodeURIComponent(code.toUpperCase())}.jpg`,
-        `product_images/${encodeURIComponent(code.toUpperCase())}.png`,
-        `product_images/${encodeURIComponent(code.toLowerCase())}.jpg`,
-        `product_images/${encodeURIComponent(code.toLowerCase())}.png`,
         `product_images/${normCode}.jpg`,
         `product_images/${normCode}.png`,
-        `product_images/${normCode}.jpeg`,
-        `product_images/${normCode}.webp`,
         `product_images/thumbs/${normCode}_thumb.png`,
-        fallback,
+        fallbackBase64,
         `product_images/brand_badges/${cleanBrand}.png`
     ];
-    
+
     while (step < candidates.length) {
         const nextUrl = candidates[step];
         if (nextUrl && nextUrl.trim() !== '') {
@@ -1280,35 +1176,25 @@ function handleDynamicImageError(img) {
         step++;
         img.setAttribute('data-step', step);
     }
-    
+
     img.onerror = null;
     img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" rx="10" fill="%23f1f5f9"/><text x="50%" y="45%" text-anchor="middle" fill="%230284c7" font-size="12" font-weight="bold" font-family="sans-serif">${encodeURIComponent(brand || '2B')}</text><text x="50%" y="65%" text-anchor="middle" fill="%2394a3b8" font-size="9" font-family="sans-serif">2B Portal</text></svg>`;
 }
 
-let products = [];
-try {
-    const rawJson = document.getElementById('catalogData').textContent;
-    products = JSON.parse(rawJson);
-} catch(e) {
-    console.error('Failed to parse products JSON:', e);
-}
-
 const DEPARTMENTS = [
-    { key: 'ALL', name_ar: 'جميع الأقسام', name_en: 'All Products', icon: '🌟', brands: 'كافة الماركات' },
-    { key: 'Computer Accessories', name_ar: 'إكسسوارات الكمبيوتر والكابلات', name_en: 'Computer Accessories', icon: '🖥️', brands: "2B, Manhattan, Logitech, HP" },
-    { key: 'Mobile Accessories & Power', name_ar: 'إكسسوارات الموبايل والباور', name_en: 'Mobile & Power', icon: '📱', brands: "Devia, Anker, L'avvento, JBL" },
-    { key: 'Bags & Sleeves', name_ar: 'حقائب لابتوب وجرابات', name_en: 'Bags & Sleeves', icon: '🎒', brands: "HP, L'avvento, Etrain" },
-    { key: 'Screen Protectors', name_ar: 'حماية الشاشات والماكينات', name_en: 'Screen Protectors', icon: '🛡️', brands: "Devia Cutting & UV" },
-    { key: 'Gaming & Wearables', name_ar: 'الجيمنج والساعات الذكية', name_en: 'Gaming & Wearables', icon: '🎮', brands: "Redragon, Mibro, Kieslect, Amazfit" },
-    { key: 'Cameras & Tech', name_ar: 'الكاميرات والطابعات والتكنولوجيا', name_en: 'Cameras & Tech', icon: '🖨️', brands: "HP, Imou, Smart Gate" }
+    { key: 'ALL', name_ar: 'جميع الأقسام', icon: '🌟' },
+    { key: 'Computer Accessories', name_ar: 'إكسسوارات الكمبيوتر والكابلات', icon: '🖥️' },
+    { key: 'Mobile Accessories & Power', name_ar: 'إكسسوارات الموبايل والباور', icon: '📱' },
+    { key: 'Bags & Sleeves', name_ar: 'حقائب لابتوب وجرابات', icon: '🎒' },
+    { key: 'Screen Protectors', name_ar: 'حماية الشاشات والماكينات', icon: '🛡️' },
+    { key: 'Gaming & Wearables', name_ar: 'الجيمنج والساعات الذكية', icon: '🎮' },
+    { key: 'Cameras & Tech', name_ar: 'الكاميرات والتكنولوجيا', icon: '🖨️' }
 ];
 
 function matchCategory(product, deptKey) {
-    if (!product || !deptKey) return false;
-    if (deptKey === 'ALL') return true;
+    if (!product || !deptKey || deptKey === 'ALL') return true;
     const catEn = (product.category_en || '').trim().toLowerCase();
     const targetKey = deptKey.trim().toLowerCase();
-    
     if (catEn === targetKey) return true;
     if (targetKey.includes('mobile') && (catEn.includes('mobile') || catEn.includes('power'))) return true;
     if (targetKey.includes('computer') && (catEn.includes('computer') || catEn.includes('cable'))) return true;
@@ -1320,14 +1206,19 @@ function matchCategory(product, deptKey) {
 }
 
 // App State
-let currentGroupingMode = 'brands'; // Default to Brands Grouping as requested!
+let mainGroupingMode = 'brands'; // 'brands' or 'categories'
+let currentBrand = ''; // '' = all
 let currentCategory = 'ALL';
-let currentBrand = '';
 let currentDealFilter = 'ALL';
 let currentView = 'grid';
 let isClientMode = false;
 let cart = {};
 let deferredPrompt = null;
+
+// Virtual pagination for instant 60fps rendering
+const PAGE_SIZE = 36;
+let currentFilteredList = [];
+let renderedCount = 0;
 
 function init() {
     if (!products || products.length === 0) {
@@ -1335,184 +1226,186 @@ function init() {
         return;
     }
 
-    renderBrandExplorer();
-    renderDepartmentsUI();
+    renderBrandPills();
+    renderDepartmentPills();
     populateBrandSelect();
-    filterProducts();
+    applyFiltersAndRender();
     initPwa();
 }
 
-function getUniqueBrandsSorted() {
-    const brandCounts = {};
-    products.forEach(p => {
-        const b = (p.brand || 'Generic').trim();
-        brandCounts[b] = (brandCounts[b] || 0) + 1;
-    });
-    return Object.keys(brandCounts).sort((a, b) => brandCounts[b] - brandCounts[a]);
+function getSortedBrands() {
+    return Object.keys(brandCountsCache).sort((a, b) => brandCountsCache[b] - brandCountsCache[a]);
 }
 
-function renderBrandExplorer() {
-    const brandsSorted = getUniqueBrandsSorted();
+function renderBrandPills() {
+    const brands = getSortedBrands();
     const container = document.getElementById('brandPillsBar');
     
-    let pillsHtml = `
-        <button class="brand-pill ${currentBrand === '' ? 'active' : ''}" onclick="selectBrandPill('')">
+    let html = `
+        <button class="brand-pill ${currentBrand === '' ? 'active' : ''}" onclick="selectBrand('')">
             <span>✨ جميع الماركات</span>
             <span class="brand-pill-count">${products.length}</span>
         </button>
     `;
-    
-    brandsSorted.forEach(b => {
-        const count = products.filter(p => p.brand === b).length;
+
+    brands.forEach(b => {
+        const count = brandCountsCache[b] || 0;
         const isActive = (currentBrand === b) ? 'active' : '';
-        pillsHtml += `
-            <button class="brand-pill ${isActive}" onclick="selectBrandPill('${esc(b)}')">
+        html += `
+            <button class="brand-pill ${isActive}" onclick="selectBrand('${esc(b)}')">
                 <span>${esc(b)}</span>
                 <span class="brand-pill-count">${count}</span>
             </button>
         `;
     });
-    
-    container.innerHTML = pillsHtml;
+
+    container.innerHTML = html;
+}
+
+function renderDepartmentPills() {
+    const container = document.getElementById('deptPillsBar');
+    let html = '';
+    DEPARTMENTS.forEach(d => {
+        let count = products.length;
+        if (d.key !== 'ALL') {
+            count = products.filter(p => matchCategory(p, d.key)).length;
+        }
+        const isActive = (currentCategory === d.key) ? 'active' : '';
+        html += `
+            <button class="dept-pill ${isActive}" onclick="selectCategory('${d.key}')">
+                <span>${d.icon}</span>
+                <span>${d.name_ar}</span>
+                <span class="brand-pill-count">${count}</span>
+            </button>
+        `;
+    });
+    container.innerHTML = html;
 }
 
 function populateBrandSelect() {
-    const brandsSorted = getUniqueBrandsSorted();
-    const brandSel = document.getElementById('brandSelect');
-    brandSel.innerHTML = '<option value="">جميع الماركات (' + brandsSorted.length + ')</option>';
-    brandsSorted.forEach(b => {
-        const count = products.filter(p => p.brand === b).length;
+    const brands = getSortedBrands();
+    const sel = document.getElementById('brandSelect');
+    sel.innerHTML = '<option value="">جميع الماركات (' + brands.length + ')</option>';
+    brands.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b;
-        opt.textContent = `${b} (${count})`;
-        if (currentBrand === b) opt.selected = true;
-        brandSel.appendChild(opt);
+        opt.textContent = `${b} (${brandCountsCache[b]})`;
+        sel.appendChild(opt);
     });
 }
 
-function renderDepartmentsUI() {
-    const deptCardsContainer = document.getElementById('deptCardsGrid');
-    deptCardsContainer.innerHTML = DEPARTMENTS.map(dept => {
-        let count = 0;
-        if (dept.key === 'ALL') count = products.length;
-        else count = products.filter(p => matchCategory(p, dept.key)).length;
+// Switch between Brand grouping vs Category grouping
+function switchMainGrouping(mode) {
+    mainGroupingMode = mode;
+    const btnBr = document.getElementById('btnModeBrand');
+    const btnCat = document.getElementById('btnModeCategory');
+    const brandBar = document.getElementById('brandPillsBar');
+    const deptBar = document.getElementById('deptPillsBar');
 
-        const isActive = (currentCategory === dept.key) ? 'active' : '';
-        return `
-            <div class="dept-card ${isActive}" onclick="selectDepartment('${dept.key}')">
-                <div class="dept-card-top">
-                    <span class="dept-icon">${dept.icon}</span>
-                    <span class="dept-badge">${count} صنف</span>
-                </div>
-                <div>
-                    <div class="dept-title">${dept.name_ar}</div>
-                    <div class="dept-sub">${dept.brands}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function setGroupingMode(mode) {
-    currentGroupingMode = mode;
-    const btnCat = document.getElementById('grpBtnCategories');
-    const btnBr = document.getElementById('grpBtnBrands');
-    const deptWrap = document.getElementById('departmentsExplorerWrap');
-    
     if (mode === 'brands') {
-        btnBr.classList.add('active', 'brand-mode');
+        btnBr.classList.add('active', 'brand-active');
         btnCat.classList.remove('active');
-        if (deptWrap) deptWrap.style.display = 'none'; // focus on brands
-        showToast('🏷️ تم تفعيل نظام الترتيب المستقل للبراندات');
+        brandBar.style.display = 'flex';
+        deptBar.style.display = 'none';
+        showToast('🏷️ تم تفعيل نظام ترتيب البراندات');
     } else {
         btnCat.classList.add('active');
-        btnBr.classList.remove('active', 'brand-mode');
-        if (deptWrap) deptWrap.style.display = 'block';
-        showToast('📂 تم تفعيل نظام الترتيب حسب الأقسام');
+        btnBr.classList.remove('active', 'brand-active');
+        deptBar.style.display = 'flex';
+        brandBar.style.display = 'none';
+        showToast('📂 تم تفعيل نظام ترتيب الأقسام');
     }
-    filterProducts();
+    applyFiltersAndRender();
 }
 
-function selectBrandPill(brand) {
+// Instant 0.01s Brand Jump
+function selectBrand(brand) {
     currentBrand = brand;
     document.getElementById('brandSelect').value = brand;
-    renderBrandExplorer();
-    filterProducts();
-    
-    const el = document.getElementById('catalogContentContainer');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderBrandPills();
+    applyFiltersAndRender();
 }
 
-function resetBrandFilter() {
-    selectBrandPill('');
+function selectCategory(catKey) {
+    currentCategory = catKey;
+    renderDepartmentPills();
+    applyFiltersAndRender();
 }
 
 function onBrandSelectChange(val) {
     currentBrand = val;
-    renderBrandExplorer();
-    filterProducts();
+    renderBrandPills();
+    applyFiltersAndRender();
 }
 
-function selectDepartment(key) {
-    currentCategory = key;
-    renderDepartmentsUI();
-    filterProducts();
-    
-    const el = document.getElementById('catalogContentContainer');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function resetAllFilters() {
+    currentBrand = '';
+    currentCategory = 'ALL';
+    currentDealFilter = 'ALL';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    document.getElementById('brandSelect').value = '';
+    document.querySelectorAll('.deal-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.deal-btn')[0].classList.add('active');
+    renderBrandPills();
+    renderDepartmentPills();
+    applyFiltersAndRender();
 }
 
+// Debounce search for speed
+let searchDebounceTimer = null;
 function onSearchInput(input) {
-    const btn = document.getElementById('clearSearchBtn');
-    btn.style.display = input.value.trim() ? 'flex' : 'none';
-    filterProducts();
+    document.getElementById('clearSearchBtn').style.display = input.value.trim() ? 'flex' : 'none';
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+        applyFiltersAndRender();
+    }, 120);
 }
 
 function clearSearch() {
     const input = document.getElementById('searchInput');
     input.value = '';
     document.getElementById('clearSearchBtn').style.display = 'none';
-    filterProducts();
+    applyFiltersAndRender();
 }
 
 function setDealFilter(deal, el) {
     currentDealFilter = deal;
     document.querySelectorAll('.deal-btn').forEach(btn => btn.classList.remove('active'));
     if (el) el.classList.add('active');
-    filterProducts();
+    applyFiltersAndRender();
 }
 
 function setView(view) {
     currentView = view;
     document.getElementById('btnGridView').classList.toggle('active', view === 'grid');
     document.getElementById('btnTableView').classList.toggle('active', view === 'table');
-    filterProducts();
+    applyFiltersAndRender();
 }
 
 function togglePresentationMode() {
     isClientMode = !isClientMode;
     const btn = document.getElementById('btnModeToggle');
     const banner = document.getElementById('clientBanner');
-    const sortSel = document.getElementById('sortSelect');
     
     if (isClientMode) {
-        btn.innerHTML = '💼 وضع التاجر (إظهار الأرباح)';
+        btn.innerHTML = '💼 وضع التاجر';
         btn.classList.add('active-client');
         banner.style.display = 'block';
         document.querySelectorAll('.wholesale-only').forEach(el => el.style.display = 'none');
-        if (sortSel.value === 'profit_high') sortSel.value = 'default';
-        showToast('👁️ تم تفعيل وضع عرض المستهلك (تم إخفاء أرباح وتكلفة التاجر)');
+        showToast('👁️ تم إخفاء أسعار التاجر (وضع الزبون)');
     } else {
-        btn.innerHTML = '👁️ وضع العرض للزبون';
+        btn.innerHTML = '👁️ وضع الزبون';
         btn.classList.remove('active-client');
         banner.style.display = 'none';
         document.querySelectorAll('.wholesale-only').forEach(el => el.style.display = '');
-        showToast('💼 تم تفعيل وضع التاجر المعتمد (إظهار كافة الأرباح والخصومات)');
+        showToast('💼 تم إظهار أسعار التاجر وهوامش الربح');
     }
-    filterProducts();
+    applyFiltersAndRender();
 }
 
-function filterProducts() {
+// Master Filter & Sort Logic
+function applyFiltersAndRender() {
     const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
     const sort = document.getElementById('sortSelect').value;
 
@@ -1528,8 +1421,7 @@ function filterProducts() {
             const matchCode = (p.code || '').toLowerCase().includes(search);
             const matchName = (p.name || '').toLowerCase().includes(search);
             const matchBrand = (p.brand || '').toLowerCase().includes(search);
-            const matchCat = (p.category_ar || '').toLowerCase().includes(search);
-            if (!matchCode && !matchName && !matchBrand && !matchCat) return false;
+            if (!matchCode && !matchName && !matchBrand) return false;
         }
         return true;
     });
@@ -1549,189 +1441,135 @@ function filterProducts() {
         filtered.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ar'));
     }
 
-    renderSegmentedCatalog(filtered, sort);
+    currentFilteredList = filtered;
+    renderedCount = 0;
+
+    // Update Status Bar
+    const statusEl = document.getElementById('filterStatusText');
+    const resetBtn = document.getElementById('resetFiltersBtn');
+    const hasFilter = (currentBrand !== '' || currentCategory !== 'ALL' || currentDealFilter !== 'ALL' || search !== '');
+    resetBtn.style.display = hasFilter ? 'block' : 'none';
+
+    let filterDesc = `الأصناف المعروضة: <strong>${filtered.length} صنف</strong>`;
+    if (currentBrand) filterDesc += ` للماركة <span class="filter-badge-item">🏷️ ${esc(currentBrand)}</span>`;
+    if (currentCategory !== 'ALL') filterDesc += ` في <span class="filter-badge-item">📂 ${esc(currentCategory)}</span>`;
+    statusEl.innerHTML = filterDesc;
+
+    renderCatalogInitial();
 }
 
-function renderSegmentedCatalog(list, sort) {
+// Initial Batch Render
+function renderCatalogInitial() {
     const container = document.getElementById('catalogContentContainer');
-    if (!list || list.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 50px 20px; background: white; border-radius: 16px; border: 1px solid var(--border); color: #64748b; font-size: 1.15rem;">🔍 لا توجد أصناف مطابقة للبحث أو الفلتر المحدد.</div>';
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+
+    if (!currentFilteredList || currentFilteredList.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px 20px; background: white; border-radius: 14px; border: 1px solid var(--border); color: #64748b; font-size: 1.1rem;">🔍 لا توجد أصناف مطابقة للبحث أو الفلتر المحدد.</div>';
+        loadMoreWrap.style.display = 'none';
         return;
     }
 
-    // 1. BRAND GROUPING MODE (The core requested feature!)
-    if (currentGroupingMode === 'brands') {
-        const brandGroups = {};
-        list.forEach(p => {
-            const b = (p.brand || 'Generic').trim();
-            if (!brandGroups[b]) brandGroups[b] = [];
-            brandGroups[b].push(p);
-        });
+    // Determine how many to show initially
+    const toRender = currentFilteredList.slice(0, PAGE_SIZE);
+    renderedCount = toRender.length;
 
-        let brandKeys = Object.keys(brandGroups);
-        if (sort === 'brand_asc') {
-            brandKeys.sort((a, b) => a.localeCompare(b));
-        } else if (sort === 'brand_desc') {
-            brandKeys.sort((a, b) => b.localeCompare(a));
-        } else {
-            // Default: by item count descending (Most Popular First)
-            brandKeys.sort((a, b) => brandGroups[b].length - brandGroups[a].length);
-        }
+    container.innerHTML = renderItemsBlock(toRender);
 
-        let html = '';
-        brandKeys.forEach(brandName => {
-            const items = brandGroups[brandName];
-            html += renderBrandSectionBlock(brandName, items);
-        });
-        container.innerHTML = html;
-        return;
-    }
-
-    // 2. CATEGORY GROUPING MODE
-    if (currentCategory !== 'ALL') {
-        const dept = DEPARTMENTS.find(d => d.key === currentCategory) || DEPARTMENTS[0];
-        container.innerHTML = renderCategorySectionBlock(dept.name_ar, dept.name_en, dept.icon, list);
-        return;
-    }
-
-    const grouped = {};
-    list.forEach(p => {
-        let matchedKey = 'Other Accessories';
-        for (const dept of DEPARTMENTS) {
-            if (dept.key !== 'ALL' && matchCategory(p, dept.key)) {
-                matchedKey = dept.key;
-                break;
-            }
-        }
-        if (!grouped[matchedKey]) grouped[matchedKey] = [];
-        grouped[matchedKey].push(p);
-    });
-
-    let html = '';
-    const sectionOrder = [
-        'Computer Accessories',
-        'Mobile Accessories & Power',
-        'Bags & Sleeves',
-        'Screen Protectors',
-        'Gaming & Wearables',
-        'Cameras & Tech',
-        'Other Accessories'
-    ];
-
-    sectionOrder.forEach(catKey => {
-        const items = grouped[catKey];
-        if (items && items.length > 0) {
-            const first = items[0];
-            const dept = DEPARTMENTS.find(d => d.key === catKey);
-            const titleAr = dept ? dept.name_ar : (first.category_ar || catKey);
-            const titleEn = dept ? dept.name_en : (first.category_en || catKey);
-            const icon = dept ? dept.icon : (first.icon || '📦');
-            html += renderCategorySectionBlock(titleAr, titleEn, icon, items);
-        }
-    });
-
-    Object.keys(grouped).forEach(catKey => {
-        if (!sectionOrder.includes(catKey) && grouped[catKey].length > 0) {
-            const items = grouped[catKey];
-            const first = items[0];
-            html += renderCategorySectionBlock(first.category_ar || catKey, first.category_en || catKey, first.icon || '📦', items);
-        }
-    });
-
-    container.innerHTML = html;
+    updateLoadMoreButton();
 }
 
-function renderBrandSectionBlock(brandName, items) {
-    const avgMargin = (items.reduce((s, x) => s + x.margin_pct, 0) / items.length).toFixed(1);
-    const minPrice = Math.min(...items.map(x => isClientMode ? x.user_price : x.dealer_price));
+function loadMoreItems() {
+    if (renderedCount >= currentFilteredList.length) return;
+    const nextBatch = currentFilteredList.slice(renderedCount, renderedCount + PAGE_SIZE);
+    renderedCount += nextBatch.length;
 
-    let contentHtml = '';
-    if (currentView === 'grid') {
-        contentHtml = `
-            <div class="products-grid">
-                ${items.map(p => renderSingleCard(p)).join('')}
-            </div>
-        `;
+    const grid = document.querySelector('.products-grid');
+    const tbody = document.querySelector('.prod-table tbody');
+
+    if (currentView === 'grid' && grid) {
+        const temp = document.createElement('div');
+        temp.innerHTML = nextBatch.map(p => renderSingleCard(p)).join('');
+        while (temp.firstChild) {
+            grid.appendChild(temp.firstChild);
+        }
+    } else if (currentView === 'table' && tbody) {
+        const temp = document.createElement('tbody');
+        temp.innerHTML = nextBatch.map(p => renderSingleTableRow(p)).join('');
+        while (temp.firstChild) {
+            tbody.appendChild(temp.firstChild);
+        }
     } else {
-        contentHtml = renderTableViewHtml(items);
+        renderCatalogInitial();
     }
 
-    return `
-        <div class="category-section-block">
+    updateLoadMoreButton();
+}
+
+function updateLoadMoreButton() {
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+    const remainingEl = document.getElementById('remainingCount');
+    const remaining = currentFilteredList.length - renderedCount;
+    if (remaining > 0) {
+        remainingEl.textContent = remaining;
+        loadMoreWrap.style.display = 'block';
+    } else {
+        loadMoreWrap.style.display = 'none';
+    }
+}
+
+function renderItemsBlock(items) {
+    let headerHtml = '';
+    if (currentBrand) {
+        const avgMargin = (items.reduce((s, x) => s + x.margin_pct, 0) / items.length).toFixed(1);
+        const minP = Math.min(...items.map(x => isClientMode ? x.user_price : x.dealer_price));
+        headerHtml = `
             <div class="brand-section-header">
                 <div class="sec-title">
-                    <span style="font-size: 1.4rem;">🏷️</span>
-                    <span>ماركة ${esc(brandName)}</span>
-                    <span class="sec-count">${items.length} صنف متوفر</span>
+                    <span style="font-size: 1.3rem;">🏷️</span>
+                    <span>ماركة ${esc(currentBrand)}</span>
+                    <span class="sec-count-badge">${currentFilteredList.length} صنف</span>
                 </div>
                 <div class="sec-meta">
                     <span class="wholesale-only">متوسط الربح: <strong style="color:#fef08a;">${avgMargin}%</strong></span>
-                    <span>تبدأ الأسعار من: <strong>${minPrice.toLocaleString()} ج.م</strong></span>
+                    <span>أقل سعر: <strong>${minP.toLocaleString()} ج.م</strong></span>
                 </div>
             </div>
-            ${contentHtml}
-        </div>
-    `;
-}
+        `;
+    }
 
-function renderCategorySectionBlock(title_ar, title_en, icon, items) {
-    const avgMargin = (items.reduce((s, x) => s + x.margin_pct, 0) / items.length).toFixed(1);
-    const minPrice = Math.min(...items.map(x => isClientMode ? x.user_price : x.dealer_price));
-
-    let contentHtml = '';
     if (currentView === 'grid') {
-        contentHtml = `
+        return `
+            ${headerHtml}
             <div class="products-grid">
                 ${items.map(p => renderSingleCard(p)).join('')}
             </div>
         `;
     } else {
-        contentHtml = renderTableViewHtml(items);
-    }
-
-    return `
-        <div class="category-section-block">
-            <div class="cat-section-header">
-                <div class="sec-title">
-                    <span style="font-size: 1.4rem;">${icon}</span>
-                    <span>${esc(title_ar)}</span>
-                    <span style="font-size:0.82rem; color:#94a3b8; font-weight:normal;">(${esc(title_en)})</span>
-                </div>
-                <div class="sec-meta">
-                    <span class="wholesale-only">متوسط الربح: <strong style="color:#fcd34d;">${avgMargin}%</strong></span>
-                    <span>تبدأ الأسعار من: <strong>${minPrice.toLocaleString()} ج.م</strong></span>
-                    <span class="sec-count">${items.length} صنف</span>
-                </div>
+        return `
+            ${headerHtml}
+            <div class="products-table-wrap" style="display:block;">
+                <table class="prod-table">
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>الكود</th>
+                            <th>الماركة</th>
+                            <th>اسم الصنف والمواصفات</th>
+                            <th>سعر المستهلك</th>
+                            <th class="wholesale-only">سعر التاجر</th>
+                            <th class="wholesale-only">ربح التاجر</th>
+                            <th class="wholesale-only">نسبة الربح</th>
+                            <th>الكمية</th>
+                            <th>طلب</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${items.map(p => renderSingleTableRow(p)).join('')}
+                    </tbody>
+                </table>
             </div>
-            ${contentHtml}
-        </div>
-    `;
-}
-
-function renderTableViewHtml(items) {
-    return `
-        <div class="products-table-wrap" style="display:block;">
-            <table class="prod-table">
-                <thead>
-                    <tr>
-                        <th>الصورة</th>
-                        <th>الكود</th>
-                        <th>الماركة</th>
-                        <th>اسم الصنف والمواصفات</th>
-                        <th>سعر المستهلك</th>
-                        <th class="wholesale-only">سعر التاجر</th>
-                        <th class="wholesale-only">ربح التاجر</th>
-                        <th class="wholesale-only">نسبة الربح</th>
-                        <th>الكمية</th>
-                        <th>طلب</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${items.map(p => renderSingleTableRow(p)).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+        `;
+    }
 }
 
 function renderSingleCard(p) {
@@ -1742,7 +1580,7 @@ function renderSingleCard(p) {
                 <div class="price-row client-main" style="justify-content: center;">
                     <span>${(p.user_price || 0).toLocaleString()} ج.م</span>
                 </div>
-                <div style="font-size:0.75rem; color:#64748b;">السعر الرسمي للمستهلك</div>
+                <div style="font-size:0.72rem; color:#64748b;">السعر الرسمي للمستهلك</div>
             </div>
         `;
     } else {
@@ -1756,7 +1594,7 @@ function renderSingleCard(p) {
                     <span>سعر التاجر:</span>
                     <span>${(p.dealer_price || 0).toLocaleString()} ج.م</span>
                 </div>
-                <div class="price-row" style="margin-top: 6px;">
+                <div class="price-row" style="margin-top: 4px;">
                     <span>ربح التاجر:</span>
                     <span class="profit-pill">+${(p.margin || 0).toLocaleString()} ج.م (${p.margin_pct}%)</span>
                 </div>
@@ -1767,7 +1605,7 @@ function renderSingleCard(p) {
     return `
         <div class="product-card">
             <div class="card-img-wrap" onclick="openLightbox(this.querySelector('img').src)">
-                <img src="product_images/${encodeURIComponent(p.code)}.jpg" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-fallback="${p.img || ''}" data-step="0" onerror="handleDynamicImageError(this)" alt="${esc(p.name)}">
+                <img src="product_images/${encodeURIComponent(p.code)}.jpg" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)" alt="${esc(p.name)}">
                 <span class="card-brand-badge">${esc(p.brand)}</span>
             </div>
             <div class="card-body">
@@ -1802,21 +1640,21 @@ function renderSingleTableRow(p) {
     }
     return `
         <tr>
-            <td style="text-align:center;"><img class="tbl-thumb" src="product_images/${encodeURIComponent(p.code)}.jpg" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-fallback="${p.img || ''}" data-step="0" onerror="handleDynamicImageError(this)" onclick="openLightbox(this.src)"></td>
+            <td style="text-align:center;"><img class="tbl-thumb" src="product_images/${encodeURIComponent(p.code)}.jpg" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)" onclick="openLightbox(this.src)"></td>
             <td style="font-weight:700; color:#0284c7;">${esc(p.code)}</td>
             <td style="font-weight:700;">${esc(p.brand)}</td>
-            <td style="max-width:340px; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</td>
+            <td style="max-width:320px; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</td>
             <td style="font-weight:700;">${(p.user_price || 0).toLocaleString()} ج.م</td>
             ${dealerCols}
             <td>
-                <div class="qty-stepper" style="width:75px;">
-                    <button class="qty-btn" style="width:22px; height:28px;" onclick="adjustQty('${esc(p.code)}', -1)">−</button>
-                    <input type="number" id="qty_tbl_${esc(p.code)}" class="order-qty-input" style="width:30px; height:28px;" min="1" value="1">
-                    <button class="qty-btn" style="width:22px; height:28px;" onclick="adjustQty('${esc(p.code)}', 1)">+</button>
+                <div class="qty-stepper" style="width:72px;">
+                    <button class="qty-btn" style="width:20px; height:26px;" onclick="adjustQty('${esc(p.code)}', -1)">−</button>
+                    <input type="number" id="qty_tbl_${esc(p.code)}" class="order-qty-input" style="width:32px; height:26px;" min="1" value="1">
+                    <button class="qty-btn" style="width:20px; height:26px;" onclick="adjustQty('${esc(p.code)}', 1)">+</button>
                 </div>
             </td>
             <td>
-                <button class="add-cart-btn" style="padding:6px 10px; font-size:0.8rem; height:30px;" onclick="addToCartByCode('${esc(p.code)}')">➕ إضافة</button>
+                <button class="add-cart-btn" style="padding:4px 8px; font-size:0.78rem; height:28px;" onclick="addToCartByCode('${esc(p.code)}')">➕ طلب</button>
             </td>
         </tr>
     `;
@@ -1834,7 +1672,7 @@ function adjustQty(code, delta) {
 }
 
 function addToCartByCode(code) {
-    const prod = products.find(p => p.code === code);
+    const prod = productByCode[code];
     if (!prod) return;
     const qtyInput = document.getElementById(`qty_${code}`) || document.getElementById(`qty_tbl_${code}`);
     const qty = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
@@ -1845,25 +1683,22 @@ function addToCartByCode(code) {
         cart[code] = { prod: prod, qty: qty };
     }
     updateCartUI();
-    showToast(`✅ تم إضافة ${qty} قطعة من [${code}] إلى السلة!`);
+    showToast(`✅ تم إضافة ${qty} قطعة من [${code}]`);
 }
 
 function updateCartUI() {
     const keys = Object.keys(cart);
     const count = keys.reduce((sum, k) => sum + cart[k].qty, 0);
     
-    // Header Count
     const cEl = document.getElementById('cartCount');
     if (cEl) cEl.textContent = count;
     
-    // Mobile Bottom Nav Badge
     const mobBadge = document.getElementById('mobCartBadge');
     if (mobBadge) {
         mobBadge.textContent = count;
         mobBadge.style.display = count > 0 ? 'block' : 'none';
     }
     
-    // Floating Cart Bar
     const floatingBar = document.getElementById('floatingCartBar');
     const floatingText = document.getElementById('floatingCartText');
     if (count > 0) {
@@ -1873,7 +1708,7 @@ function updateCartUI() {
             const price = isClientMode ? p.user_price : p.dealer_price;
             totalVal += price * cart[k].qty;
         });
-        floatingText.textContent = `🛒 ${count} صنف بالطلب | إجمالي: ${totalVal.toLocaleString()} ج.م`;
+        floatingText.textContent = `🛒 ${count} صنف بالطلب | ${totalVal.toLocaleString()} ج.م`;
         floatingBar.classList.add('show');
     } else {
         floatingBar.classList.remove('show');
@@ -1886,7 +1721,7 @@ function openCartModal() {
     const keys = Object.keys(cart);
     
     if (keys.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 24px;">سلة الطلبات فارغة حالياً. قم بإضافة الأصناف بالضغط على زر "➕ طلب".</p>';
+        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;">السلة فارغة حالياً.</p>';
         document.getElementById('cartDealerTotal').textContent = '0.00 ج.م';
         document.getElementById('cartUserTotal').textContent = '0.00 ج.م';
         document.getElementById('cartProfitTotal').textContent = '+0.00 ج.م';
@@ -1912,17 +1747,17 @@ function openCartModal() {
             
             return `
                 <div class="cart-item-row">
-                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                        <img src="product_images/${encodeURIComponent(p.code)}.jpg" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-fallback="${p.img || ''}" data-step="0" onerror="handleDynamicImageError(this)" style="width:40px; height:40px; object-fit:contain; border-radius:6px; border:1px solid #e2e8f0; background:white;">
+                    <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
+                        <img src="product_images/${encodeURIComponent(p.code)}.jpg" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)" style="width:36px; height:36px; object-fit:contain; border-radius:6px; border:1px solid #e2e8f0; background:white;">
                         <div style="min-width:0; overflow:hidden;">
-                            <div style="font-weight:700; font-size:0.86rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.code)} - ${esc(p.brand)}</div>
-                            <div style="font-size:0.75rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</div>
+                            <div style="font-weight:700; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.code)} - ${esc(p.brand)}</div>
+                            <div style="font-size:0.74rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</div>
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
-                        <input type="number" min="1" value="${item.qty}" style="width:44px; padding:4px; text-align:center; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;" onchange="cart['${esc(k)}'].qty = Math.max(1, parseInt(this.value)||1); openCartModal(); updateCartUI();">
-                        <div style="font-weight:800; font-size:0.88rem; min-width:95px; text-align:left;">${priceDisp}</div>
-                        <button style="background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:4px 8px; cursor:pointer;" onclick="delete cart['${esc(k)}']; updateCartUI(); openCartModal();">✕</button>
+                        <input type="number" min="1" value="${item.qty}" style="width:42px; padding:3px; text-align:center; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;" onchange="cart['${esc(k)}'].qty = Math.max(1, parseInt(this.value)||1); openCartModal(); updateCartUI();">
+                        <div style="font-weight:800; font-size:0.86rem; min-width:90px; text-align:left;">${priceDisp}</div>
+                        <button style="background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:3px 7px; cursor:pointer;" onclick="delete cart['${esc(k)}']; updateCartUI(); openCartModal();">✕</button>
                     </div>
                 </div>
             `;
@@ -1942,7 +1777,7 @@ function closeCartModal() {
 }
 
 function clearCart() {
-    if (confirm('هل أنت متأكد من إفراغ سلة الطلبية بالكامل؟')) {
+    if (confirm('إفراغ سلة الطلبية؟')) {
         cart = {};
         updateCartUI();
         openCartModal();
@@ -1956,27 +1791,22 @@ function sendWhatsAppOrder() {
         alert('السلة فارغة!');
         return;
     }
-    let msg = "السلام عليكم ورحمة الله، مطلوب طلبية بضاعة من كتالوج وأسعار 2026:\n\n";
+    let msg = "السلام عليكم ورحمة الله، طلبية بضاعة من كتالوج 2B:\n\n";
     let total = 0;
     keys.forEach((k, idx) => {
         const item = cart[k];
         const p = item.prod;
         const priceToUse = isClientMode ? p.user_price : p.dealer_price;
-        const line = `${idx+1}. [${p.code}] ${p.brand} - ${p.name.substring(0, 35)} | الكمية: ${item.qty} | السعر: ${priceToUse} ج.م\n`;
-        msg += line;
+        msg += `${idx+1}. [${p.code}] ${p.brand} - ${p.name.substring(0, 32)} | الكمية: ${item.qty} | السعر: ${priceToUse} ج.م\n`;
         total += priceToUse * item.qty;
     });
     msg += `\nإجمالي قيمة الطلبية: ${total.toLocaleString()} ج.م\nبرجاء التأكيد وتجهيز الفاتورة.`;
-    const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function printQuotation() {
     const keys = Object.keys(cart);
-    if (keys.length === 0) {
-        alert('السلة فارغة!');
-        return;
-    }
+    if (keys.length === 0) return alert('السلة فارغة!');
     const today = new Date().toISOString().split('T')[0];
     let total = 0;
     
@@ -1988,55 +1818,49 @@ function printQuotation() {
         total += lineTotal;
         return `
             <tr>
-                <td style="text-align:center; padding:8px; border:1px solid #cbd5e1;">${idx+1}</td>
-                <td style="padding:8px; border:1px solid #cbd5e1; font-weight:bold;">${esc(p.code)}</td>
-                <td style="padding:8px; border:1px solid #cbd5e1;">${esc(p.brand)}</td>
-                <td style="padding:8px; border:1px solid #cbd5e1;">${esc(p.name)}</td>
-                <td style="text-align:center; padding:8px; border:1px solid #cbd5e1; font-weight:bold;">${item.qty}</td>
-                <td style="text-align:right; padding:8px; border:1px solid #cbd5e1;">${price.toLocaleString()} ج.م</td>
-                <td style="text-align:right; padding:8px; border:1px solid #cbd5e1; font-weight:bold;">${lineTotal.toLocaleString()} ج.م</td>
+                <td style="text-align:center; padding:6px; border:1px solid #cbd5e1;">${idx+1}</td>
+                <td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${esc(p.code)}</td>
+                <td style="padding:6px; border:1px solid #cbd5e1;">${esc(p.brand)}</td>
+                <td style="padding:6px; border:1px solid #cbd5e1;">${esc(p.name)}</td>
+                <td style="text-align:center; padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${item.qty}</td>
+                <td style="text-align:right; padding:6px; border:1px solid #cbd5e1;">${price.toLocaleString()} ج.م</td>
+                <td style="text-align:right; padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${lineTotal.toLocaleString()} ج.م</td>
             </tr>
         `;
     }).join('');
 
     const printHtml = `
-        <div style="font-family:'Cairo', sans-serif; direction:rtl; padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:20px;">
+        <div style="font-family:'Cairo', sans-serif; direction:rtl; padding:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:16px;">
                 <div>
                     <h2 style="margin:0; color:#0f172a;">2B B2B | أمر توريد / عرض أسعار رسمي</h2>
-                    <p style="margin:4px 0 0 0; color:#64748b; font-size:14px;">تاريخ العرض: ${today} | كود الطلبية: ORD-${Math.floor(1000 + Math.random() * 9000)}</p>
+                    <p style="margin:3px 0 0 0; color:#64748b; font-size:13px;">تاريخ العرض: ${today} | كود الطلبية: ORD-${Math.floor(1000 + Math.random() * 9000)}</p>
                 </div>
                 <div style="text-align:left;">
                     <div style="font-weight:bold; font-size:18px; color:#f37021;">2B Official Partner</div>
-                    <div style="font-size:12px; color:#64748b;">قائمة أسعار معتمدة 2026</div>
+                    <div style="font-size:11px; color:#64748b;">قائمة أسعار معتمدة 2026</div>
                 </div>
             </div>
-            <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:16px;">
                 <thead>
                     <tr style="background:#0f172a; color:white;">
-                        <th style="padding:8px; border:1px solid #0f172a;">م</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">كود الصنف</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">الماركة</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">اسم الصنف والمواصفات</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">الكمية</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">سعر الوحدة</th>
-                        <th style="padding:8px; border:1px solid #0f172a;">الإجمالي</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">م</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">الكود</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">الماركة</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">اسم الصنف</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">الكمية</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">السعر</th>
+                        <th style="padding:6px; border:1px solid #0f172a;">الإجمالي</th>
                     </tr>
                 </thead>
-                <tbody>
-                    ${tableRows}
-                </tbody>
+                <tbody>${tableRows}</tbody>
                 <tfoot>
-                    <tr style="background:#f1f5f9; font-size:15px; font-weight:bold;">
-                        <td colspan="6" style="text-align:left; padding:10px; border:1px solid #cbd5e1;">الإجمالي الكلي للطلبية:</td>
-                        <td style="text-align:right; padding:10px; border:1px solid #cbd5e1; color:#0f172a;">${total.toLocaleString()} ج.م</td>
+                    <tr style="background:#f1f5f9; font-size:14px; font-weight:bold;">
+                        <td colspan="6" style="text-align:left; padding:8px; border:1px solid #cbd5e1;">الإجمالي الكلي:</td>
+                        <td style="text-align:right; padding:8px; border:1px solid #cbd5e1; color:#0f172a;">${total.toLocaleString()} ج.م</td>
                     </tr>
                 </tfoot>
             </table>
-            <div style="margin-top:30px; display:flex; justify-content:space-between; font-size:13px; color:#64748b; border-top:1px solid #e2e8f0; padding-top:10px;">
-                <div>توقيع واستلام العميل: ___________________</div>
-                <div>الختم والاعتماد: ___________________</div>
-            </div>
         </div>
     `;
 
@@ -2044,27 +1868,19 @@ function printQuotation() {
     printWindow.document.write('<html><head><title>عرض أسعار رسمي</title><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"></head><body>' + printHtml + '</body></html>');
     printWindow.document.close();
     printWindow.focus();
-    setTimeout(() => { printWindow.print(); }, 500);
+    setTimeout(() => { printWindow.print(); }, 400);
 }
 
 function exportCartExcel() {
     const keys = Object.keys(cart);
-    if (keys.length === 0) {
-        alert('السلة فارغة!');
-        return;
-    }
-    let csvContent = "\uFEFF";
-    csvContent += "كود الصنف,الماركة,اسم الصنف,الكمية,سعر الوحدة (ج.م),الإجمالي (ج.م)\n";
-    
+    if (keys.length === 0) return alert('السلة فارغة!');
+    let csvContent = "\uFEFFكود الصنف,الماركة,اسم الصنف,الكمية,سعر الوحدة (ج.م),الإجمالي (ج.م)\n";
     keys.forEach(k => {
         const item = cart[k];
         const p = item.prod;
         const price = isClientMode ? p.user_price : p.dealer_price;
-        const lineTotal = price * item.qty;
-        const cleanName = `"${p.name.replace(/"/g, '""')}"`;
-        csvContent += `${p.code},${p.brand},${cleanName},${item.qty},${price},${lineTotal}\n`;
+        csvContent += `${p.code},${p.brand},"${p.name.replace(/"/g, '""')}",${item.qty},${price},${price * item.qty}\n`;
     });
-    
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -2085,7 +1901,59 @@ function closeImgModal() {
     document.getElementById('imgModal').style.display = 'none';
 }
 
-// QR Code & Share Modal
+// PWA Install & Modal
+function openInstallModal() {
+    const promptBox = document.getElementById('nativeInstallPromptBox');
+    if (deferredPrompt) {
+        promptBox.style.display = 'block';
+    } else {
+        promptBox.style.display = 'none';
+    }
+    document.getElementById('installModal').style.display = 'flex';
+}
+
+function closeInstallModal() {
+    document.getElementById('installModal').style.display = 'none';
+}
+
+function executePwaInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choice) => {
+            if (choice.outcome === 'accepted') {
+                showToast('🚀 جاري تثبيت التطبيق...');
+                closeInstallModal();
+            }
+            deferredPrompt = null;
+        });
+    }
+}
+
+function initPwa() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                console.log('SW active with scope:', reg.scope);
+            }).catch(err => {
+                console.warn('SW error:', err);
+            });
+        });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const promptBox = document.getElementById('nativeInstallPromptBox');
+        if (promptBox) promptBox.style.display = 'block';
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        showToast('🎉 تم تثبيت الكتالوج كتطبيق بنجاح!');
+    });
+}
+
+// QR & Share
 function getAppUrl() {
     if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
         return window.location.href.split('#')[0];
@@ -2109,115 +1977,37 @@ function copyShareUrl() {
     input.select();
     input.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(input.value).then(() => {
-        showToast('📋 تم نسخ رابط التطبيق بنجاح!');
+        showToast('📋 تم نسخ الرابط بنجاح!');
     });
 }
 
 function shareViaWhatsApp() {
     const url = getAppUrl();
-    const msg = `السلام عليكم ورحمة الله، يمكنك الآن فتح كتالوج وأسعار منتجات 2B لعام 2026 والطلب مباشرة من هاتفك عبر الرابط:\n${url}`;
+    const msg = `السلام عليكم ورحمة الله، يمكنك فتح كتالوج وأسعار منتجات 2B لعام 2026 والطلب مباشرة من هاتفك عبر الرابط:\n${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// Mobile Bottom Nav helpers
-function navToHome() {
-    currentCategory = 'ALL';
-    currentBrand = '';
-    renderDepartmentsUI();
-    renderBrandExplorer();
-    filterProducts();
+// Mobile Bottom Nav actions
+function navToBrands() {
+    switchMainGrouping('brands');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setNavActive(0);
 }
-
-function navToBrands() {
-    setGroupingMode('brands');
-    const el = document.querySelector('.brand-explorer-box');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function navToCategories() {
+    switchMainGrouping('categories');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setNavActive(1);
 }
-
-function navToCategories() {
-    setGroupingMode('categories');
-    const el = document.getElementById('departmentsExplorerWrap');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setNavActive(2);
-}
-
 function setNavActive(idx) {
     document.querySelectorAll('.mob-nav-item').forEach((btn, i) => {
         btn.classList.toggle('active', i === idx);
     });
 }
 
-// PWA & Service Worker Integration
-function initPwa() {
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                console.log('PWA Service Worker registered successfully with scope:', reg.scope);
-            }).catch(err => {
-                console.log('PWA Service Worker registration failed:', err);
-            });
-        });
-    }
-
-    // Capture install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Show install button in header & banner
-        const btn = document.getElementById('btnPwaInstall');
-        if (btn) btn.style.display = 'flex';
-        
-        const banner = document.getElementById('pwaBanner');
-        if (banner && !sessionStorage.getItem('pwa_banner_dismissed')) {
-            banner.classList.add('show');
-        }
-    });
-
-    window.addEventListener('appinstalled', () => {
-        deferredPrompt = null;
-        const btn = document.getElementById('btnPwaInstall');
-        if (btn) btn.style.display = 'none';
-        const banner = document.getElementById('pwaBanner');
-        if (banner) banner.classList.remove('show');
-        showToast('🎉 تم تثبيت تطبيق الكتالوج بنجاح على جهازك!');
-    });
-}
-
-function triggerPwaInstall() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') {
-                showToast('🚀 جاري تثبيت التطبيق...');
-            }
-            deferredPrompt = null;
-        });
-    } else {
-        openShareModal();
-    }
-}
-
-function dismissPwaBanner() {
-    const banner = document.getElementById('pwaBanner');
-    if (banner) banner.classList.remove('show');
-    sessionStorage.setItem('pwa_banner_dismissed', 'true');
-}
-
-// Excel Upload direct support
+// Excel Upload support
 function handleExcelUpload(event) {
     const file = event.target.files[0];
-    if (!file) return;
-    
-    if (typeof XLSX === 'undefined') {
-        alert('مكتبة قراءة الإكسيل غير متوفرة حالياً، يرجى الاتصال بالإنترنت.');
-        return;
-    }
-    
+    if (!file || typeof XLSX === 'undefined') return;
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
@@ -2225,17 +2015,11 @@ function handleExcelUpload(event) {
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
             const rawRows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-            
-            if (rawRows.length < 2) {
-                alert('الملف فارغ أو غير متوافق!');
-                return;
-            }
-            
+            if (rawRows.length < 2) return;
             const newProducts = [];
             for (let i = 1; i < rawRows.length; i++) {
                 const r = rawRows[i];
                 if (!r || !r[0] || String(r[0]).toLowerCase().startsWith('1 of')) continue;
-                
                 const code = String(r[0] || '').trim();
                 const desc = String(r[1] || '').trim();
                 const userP = parseFloat(r[2]) || 0;
@@ -2244,44 +2028,38 @@ function handleExcelUpload(event) {
                 const itemClass = String(r[5] || 'General').trim();
                 const margin = userP - dealerP;
                 const marginPct = userP > 0 ? ((margin / userP) * 100) : 0;
-                
-                const existing = products.find(p => p.code === code);
-                const img = existing ? existing.img : '';
-                
+                const existing = productByCode[code];
                 newProducts.push({
-                    id: i - 1,
-                    code: code,
-                    name: desc,
-                    brand: brand,
+                    id: i - 1, code: code, name: desc, brand: brand,
                     category_en: existing ? existing.category_en : 'Other Accessories',
                     category_ar: existing ? existing.category_ar : 'إكسسوارات متنوعة',
-                    icon: existing ? existing.icon : '📦',
-                    item_class: itemClass,
-                    user_price: userP,
-                    dealer_price: dealerP,
+                    icon: existing ? existing.icon : '📦', item_class: itemClass,
+                    user_price: userP, dealer_price: dealerP,
                     margin: Math.round(margin * 100) / 100,
                     margin_pct: Math.round(marginPct * 10) / 10,
-                    img: img
+                    img: existing ? existing.img : ''
                 });
             }
-            
             if (newProducts.length > 0) {
                 products = newProducts;
-                const banner = document.getElementById('syncSuccessBanner');
-                banner.textContent = `✅ تم تحديث ${products.length} صنف بنجاح مباشر من ملف الإكسيل!`;
-                banner.style.display = 'block';
-                setTimeout(() => { banner.style.display = 'none'; }, 4000);
+                productByCode = {};
+                brandCountsCache = {};
+                categoryCountsCache = {};
+                products.forEach(p => {
+                    productByCode[p.code] = p;
+                    const b = (p.brand || 'Generic').trim();
+                    brandCountsCache[b] = (brandCountsCache[b] || 0) + 1;
+                });
+                showToast(`✅ تم تحديث ${products.length} صنف من شيت الإكسيل!`);
                 init();
             }
-        } catch (err) {
-            console.error(err);
-            alert('حدث خطأ أثناء قراءة ملف الإكسيل: ' + err.message);
+        } catch(err) {
+            alert('خطأ في قراءة ملف الإكسيل: ' + err.message);
         }
     };
     reader.readAsArrayBuffer(file);
 }
 
-// Immediate Start
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
