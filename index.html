@@ -1242,7 +1242,7 @@ function renderBrandPills() {
     const container = document.getElementById('brandPillsBar');
     
     let html = `
-        <button class="brand-pill ${currentBrand === '' ? 'active' : ''}" onclick="selectBrand('')">
+        <button class="brand-pill ${currentBrand === '' ? 'active' : ''}" data-brand="" onclick="selectBrand('')">
             <span>✨ جميع الماركات</span>
             <span class="brand-pill-count">${products.length}</span>
         </button>
@@ -1250,9 +1250,9 @@ function renderBrandPills() {
 
     brands.forEach(b => {
         const count = brandCountsCache[b] || 0;
-        const isActive = (currentBrand === b) ? 'active' : '';
+        const isActive = (currentBrand && currentBrand.toUpperCase() === b.toUpperCase()) ? 'active' : '';
         html += `
-            <button class="brand-pill ${isActive}" onclick="selectBrand('${esc(b)}')">
+            <button class="brand-pill ${isActive}" data-brand="${esc(b)}" onclick="selectBrand(this.getAttribute('data-brand'))">
                 <span>${esc(b)}</span>
                 <span class="brand-pill-count">${count}</span>
             </button>
@@ -1272,7 +1272,7 @@ function renderDepartmentPills() {
         }
         const isActive = (currentCategory === d.key) ? 'active' : '';
         html += `
-            <button class="dept-pill ${isActive}" onclick="selectCategory('${d.key}')">
+            <button class="dept-pill ${isActive}" data-dept="${esc(d.key)}" onclick="selectCategory(this.getAttribute('data-dept'))">
                 <span>${d.icon}</span>
                 <span>${d.name_ar}</span>
                 <span class="brand-pill-count">${count}</span>
@@ -1320,20 +1320,21 @@ function switchMainGrouping(mode) {
 
 // Instant 0.01s Brand Jump
 function selectBrand(brand) {
-    currentBrand = brand;
-    document.getElementById('brandSelect').value = brand;
+    currentBrand = (brand || '').trim();
+    const sel = document.getElementById('brandSelect');
+    if (sel) sel.value = currentBrand;
     renderBrandPills();
     applyFiltersAndRender();
 }
 
 function selectCategory(catKey) {
-    currentCategory = catKey;
+    currentCategory = catKey || 'ALL';
     renderDepartmentPills();
     applyFiltersAndRender();
 }
 
 function onBrandSelectChange(val) {
-    currentBrand = val;
+    currentBrand = (val || '').trim();
     renderBrandPills();
     applyFiltersAndRender();
 }
@@ -1342,11 +1343,15 @@ function resetAllFilters() {
     currentBrand = '';
     currentCategory = 'ALL';
     currentDealFilter = 'ALL';
-    document.getElementById('searchInput').value = '';
-    document.getElementById('clearSearchBtn').style.display = 'none';
-    document.getElementById('brandSelect').value = '';
+    const sInput = document.getElementById('searchInput');
+    if (sInput) sInput.value = '';
+    const clrBtn = document.getElementById('clearSearchBtn');
+    if (clrBtn) clrBtn.style.display = 'none';
+    const sel = document.getElementById('brandSelect');
+    if (sel) sel.value = '';
     document.querySelectorAll('.deal-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.deal-btn')[0].classList.add('active');
+    const dealBtns = document.querySelectorAll('.deal-btn');
+    if (dealBtns.length > 0) dealBtns[0].classList.add('active');
     renderBrandPills();
     renderDepartmentPills();
     applyFiltersAndRender();
@@ -1411,7 +1416,7 @@ function applyFiltersAndRender() {
 
     let filtered = products.filter(p => {
         if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
-        if (currentBrand && p.brand !== currentBrand) return false;
+        if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
         
         if (currentDealFilter === 'HIGH_MARGIN' && p.margin_pct < 30) return false;
         if (currentDealFilter === 'UNDER_500' && p.dealer_price >= 500) return false;
@@ -1520,8 +1525,8 @@ function updateLoadMoreButton() {
 function renderItemsBlock(items) {
     let headerHtml = '';
     if (currentBrand) {
-        const avgMargin = (items.reduce((s, x) => s + x.margin_pct, 0) / items.length).toFixed(1);
-        const minP = Math.min(...items.map(x => isClientMode ? x.user_price : x.dealer_price));
+        const avgMargin = items.length ? (items.reduce((s, x) => s + (Number(x.margin_pct) || 0), 0) / items.length).toFixed(1) : 0;
+        const minP = items.length ? Math.min(...items.map(x => Number(isClientMode ? x.user_price : x.dealer_price) || 0)) : 0;
         headerHtml = `
             <div class="brand-section-header">
                 <div class="sec-title">
@@ -1617,11 +1622,11 @@ function renderSingleCard(p) {
                     ${priceHtml}
                     <div class="card-footer">
                         <div class="qty-stepper">
-                            <button class="qty-btn" onclick="adjustQty('${esc(p.code)}', -1)">−</button>
+                            <button class="qty-btn" data-code="${esc(p.code)}" onclick="adjustQty(this.getAttribute('data-code'), -1)">−</button>
                             <input type="number" id="qty_${esc(p.code)}" class="order-qty-input" min="1" value="1">
-                            <button class="qty-btn" onclick="adjustQty('${esc(p.code)}', 1)">+</button>
+                            <button class="qty-btn" data-code="${esc(p.code)}" onclick="adjustQty(this.getAttribute('data-code'), 1)">+</button>
                         </div>
-                        <button class="add-cart-btn" onclick="addToCartByCode('${esc(p.code)}')">➕ طلب</button>
+                        <button class="add-cart-btn" data-code="${esc(p.code)}" onclick="addToCartByCode(this.getAttribute('data-code'))">➕ طلب</button>
                     </div>
                 </div>
             </div>
@@ -1648,13 +1653,13 @@ function renderSingleTableRow(p) {
             ${dealerCols}
             <td>
                 <div class="qty-stepper" style="width:72px;">
-                    <button class="qty-btn" style="width:20px; height:26px;" onclick="adjustQty('${esc(p.code)}', -1)">−</button>
+                    <button class="qty-btn" style="width:20px; height:26px;" data-code="${esc(p.code)}" onclick="adjustQty(this.getAttribute('data-code'), -1)">−</button>
                     <input type="number" id="qty_tbl_${esc(p.code)}" class="order-qty-input" style="width:32px; height:26px;" min="1" value="1">
-                    <button class="qty-btn" style="width:20px; height:26px;" onclick="adjustQty('${esc(p.code)}', 1)">+</button>
+                    <button class="qty-btn" style="width:20px; height:26px;" data-code="${esc(p.code)}" onclick="adjustQty(this.getAttribute('data-code'), 1)">+</button>
                 </div>
             </td>
             <td>
-                <button class="add-cart-btn" style="padding:4px 8px; font-size:0.78rem; height:28px;" onclick="addToCartByCode('${esc(p.code)}')">➕ طلب</button>
+                <button class="add-cart-btn" style="padding:4px 8px; font-size:0.78rem; height:28px;" data-code="${esc(p.code)}" onclick="addToCartByCode(this.getAttribute('data-code'))">➕ طلب</button>
             </td>
         </tr>
     `;
@@ -1755,9 +1760,9 @@ function openCartModal() {
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
-                        <input type="number" min="1" value="${item.qty}" style="width:42px; padding:3px; text-align:center; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;" onchange="cart['${esc(k)}'].qty = Math.max(1, parseInt(this.value)||1); openCartModal(); updateCartUI();">
+                        <input type="number" min="1" value="${item.qty}" data-code="${esc(k)}" style="width:42px; padding:3px; text-align:center; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;" onchange="updateCartItemQty(this.getAttribute('data-code'), this.value)">
                         <div style="font-weight:800; font-size:0.86rem; min-width:90px; text-align:left;">${priceDisp}</div>
-                        <button style="background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:3px 7px; cursor:pointer;" onclick="delete cart['${esc(k)}']; updateCartUI(); openCartModal();">✕</button>
+                        <button data-code="${esc(k)}" style="background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:3px 7px; cursor:pointer;" onclick="removeCartItem(this.getAttribute('data-code'))">✕</button>
                     </div>
                 </div>
             `;
@@ -1770,6 +1775,22 @@ function openCartModal() {
         document.getElementById('cartRoiPercent').textContent = `${roi}%`;
     }
     modal.style.display = 'flex';
+}
+
+function updateCartItemQty(code, qty) {
+    if (cart[code]) {
+        cart[code].qty = Math.max(1, parseInt(qty, 10) || 1);
+        openCartModal();
+        updateCartUI();
+    }
+}
+
+function removeCartItem(code) {
+    if (cart[code]) {
+        delete cart[code];
+        updateCartUI();
+        openCartModal();
+    }
 }
 
 function closeCartModal() {
