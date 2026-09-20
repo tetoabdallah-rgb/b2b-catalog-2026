@@ -1,5 +1,5 @@
 // Service Worker - 2B Catalog 2026
-const CACHE_NAME = 'catalog-2026-v3';
+const CACHE_NAME = 'catalog-2026-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -38,6 +38,14 @@ self.addEventListener('activate', (e) => {
 // Stale-While-Revalidate: Instant 0ms Load from Cache, Background Update
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+
+  // Bypass any obsolete product_images requests
+  try {
+    const url = new URL(e.request.url);
+    if (url.pathname.includes('/product_images/')) {
+      return;
+    }
+  } catch(err) {}
 
   e.respondWith(
     caches.match(e.request).then((cachedResponse) => {
