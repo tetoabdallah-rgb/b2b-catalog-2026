@@ -1,5 +1,5 @@
 // Service Worker - 2B Catalog 2026
-const CACHE_NAME = 'catalog-2026-v2';
+const CACHE_NAME = 'catalog-2026-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -35,35 +35,23 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// Stale-While-Revalidate: Instant 0ms Load from Cache, Background Update
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
-
-  // Network first for HTML, cache first for static assets
-  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
-    e.respondWith(
-      fetch(e.request)
-        .then((networkRes) => {
-          if (networkRes && networkRes.status === 200) {
-            const clone = networkRes.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
-          }
-          return networkRes;
-        })
-        .catch(() => caches.match(e.request).then((cached) => cached || caches.match('./index.html')))
-    );
-    return;
-  }
 
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      return cached || fetch(e.request).then((networkRes) => {
-        if (networkRes && networkRes.status === 200 && networkRes.type === 'basic') {
+    caches.match(e.request).then((cachedResponse) => {
+      const fetchPromise = fetch(e.request).then((networkRes) => {
+        if (networkRes && networkRes.status === 200) {
           const clone = networkRes.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
         }
         return networkRes;
-      }).catch(() => cached);
+      }).catch(() => {
+        return cachedResponse;
+      });
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
