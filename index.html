@@ -1427,42 +1427,17 @@ try {
     console.error('Failed to parse products JSON:', e);
 }
 
-// Lightweight Image Fallback without bloating DOM attributes!
+// Instant In-Memory Image Fallback - No failed network requests!
 function handleDynamicImageError(img) {
-    const code = (img.getAttribute('data-code') || '').trim();
-    const brand = (img.getAttribute('data-brand') || '').trim();
-    const cleanBrand = brand.replace(/[^A-Za-z0-9]/g, '_');
-    const normCode = code.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    let step = parseInt(img.getAttribute('data-step') || '0', 10);
-    step++;
-    img.setAttribute('data-step', step);
-
-    const prod = productByCode[code];
-    const fallbackBase64 = prod ? (prod.img || '') : '';
-
-    const candidates = [
-        prod && prod.img_file ? `product_images/${encodeURIComponent(prod.img_file)}` : '',
-        `product_images/${encodeURIComponent(code)}.png`,
-        `product_images/${encodeURIComponent(code)}.jpg`,
-        `product_images/${normCode}.png`,
-        `product_images/${normCode}.jpg`,
-        `product_images/thumbs/${normCode}_thumb.png`,
-        fallbackBase64,
-        `product_images/brand_badges/${cleanBrand}.png`
-    ].filter(Boolean);
-
-    while (step < candidates.length) {
-        const nextUrl = candidates[step];
-        if (nextUrl && nextUrl.trim() !== '') {
-            img.src = nextUrl;
-            return;
-        }
-        step++;
-        img.setAttribute('data-step', step);
-    }
-
     img.onerror = null;
-    img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" rx="10" fill="%23f1f5f9"/><text x="50%" y="45%" text-anchor="middle" fill="%230284c7" font-size="12" font-weight="bold" font-family="sans-serif">${encodeURIComponent(brand || '2B')}</text><text x="50%" y="65%" text-anchor="middle" fill="%2394a3b8" font-size="9" font-family="sans-serif">2B Portal</text></svg>`;
+    const code = (img.getAttribute('data-code') || '').trim();
+    const prod = productByCode[code];
+    if (prod && prod.img && img.src !== prod.img) {
+        img.src = prod.img;
+        return;
+    }
+    const brand = (img.getAttribute('data-brand') || '2B').trim();
+    img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" rx="16" fill="%23f8fafc"/><rect x="15" y="15" width="270" height="270" rx="12" fill="%23ffffff" stroke="%23e2e8f0" stroke-width="2"/><text x="150" y="140" text-anchor="middle" fill="%230284c7" font-size="24" font-weight="900" font-family="sans-serif">${encodeURIComponent(brand)}</text><text x="150" y="175" text-anchor="middle" fill="%2364748b" font-size="13" font-weight="bold" font-family="sans-serif">${encodeURIComponent(code)}</text></svg>`;
 }
 
 const DEPARTMENTS = [
@@ -1934,12 +1909,12 @@ function renderSingleCard(p) {
         `;
     }
 
-    const imgSrc = p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : `product_images/${encodeURIComponent(p.code)}.jpg`;
+    const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
 
     return `
         <div class="product-card" onclick="openProductModal('${esc(p.code)}')">
             <div class="card-img-wrap">
-                <img src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)" alt="${esc(p.name)}">
+                <img src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)" alt="${esc(p.name)}">
                 <span class="card-brand-badge">${esc(p.brand)}</span>
                 <span class="card-zoom-hint">🔍 تفاصيل</span>
             </div>
@@ -1991,10 +1966,10 @@ function renderSingleTableRow(p) {
             <td style="text-align:center; font-weight:700; color:#b45309;">${p.margin_pct}%</td>
         `;
     }
-    const imgSrc = p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : `product_images/${encodeURIComponent(p.code)}.jpg`;
+    const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
     return `
         <tr onclick="openProductModal('${esc(p.code)}')">
-            <td style="text-align:center;"><img class="tbl-thumb" src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)"></td>
+            <td style="text-align:center;"><img class="tbl-thumb" src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)"></td>
             <td style="font-weight:800; color:#0284c7; font-family:monospace; font-size:0.86rem;">${esc(p.code)}</td>
             <td style="font-weight:700;">${esc(p.brand)}</td>
             <td class="tbl-desc">${renderTableDescHtml(p)}</td>
@@ -2099,11 +2074,11 @@ function openCartModal() {
                 `${lineUser.toLocaleString()} ج.م` : 
                 `${lineDealer.toLocaleString()} ج.م <span style="font-size:0.75rem; color:#16a34a; font-weight:700;">(+${lineProfit.toLocaleString()} ربح)</span>`;
             
-            const cartImgSrc = p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : `product_images/${encodeURIComponent(p.code)}.jpg`;
+            const cartImgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
             return `
                 <div class="cart-item-row">
                     <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
-                        <img src="${cartImgSrc}" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" data-step="0" onerror="handleDynamicImageError(this)" style="width:36px; height:36px; object-fit:contain; border-radius:6px; border:1px solid #e2e8f0; background:white;">
+                        <img src="${cartImgSrc}" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)" style="width:36px; height:36px; object-fit:contain; border-radius:6px; border:1px solid #e2e8f0; background:white;">
                         <div style="min-width:0; overflow:hidden;">
                             <div style="font-weight:700; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.code)} - ${esc(p.brand)}</div>
                             <div style="font-size:0.74rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</div>
@@ -2281,16 +2256,10 @@ function openProductModal(code) {
     const priceBox = document.getElementById('pModalPriceBox');
     const qtyInput = document.getElementById('pModalQty');
 
-    let initialImgSrc = '';
-    if (prod.img_file) {
-        initialImgSrc = `product_images/${encodeURIComponent(prod.img_file)}`;
-    } else {
-        initialImgSrc = `product_images/${encodeURIComponent(prod.code)}.jpg`;
-    }
+    const initialImgSrc = prod.img || (prod.img_file ? `product_images/${encodeURIComponent(prod.img_file)}` : '');
     imgEl.src = initialImgSrc;
     imgEl.setAttribute('data-code', prod.code);
     imgEl.setAttribute('data-brand', prod.brand || '2B');
-    imgEl.setAttribute('data-step', '0');
     imgEl.onerror = function() { handleDynamicImageError(this); };
 
     brandBadge.textContent = prod.brand || '2B';
@@ -2422,7 +2391,8 @@ function executePwaInstall() {
 function initPwa() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=4').then(reg => {
+                reg.update();
                 console.log('SW active with scope:', reg.scope);
             }).catch(err => {
                 console.warn('SW error:', err);
