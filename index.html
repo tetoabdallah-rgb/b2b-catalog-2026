@@ -18,6 +18,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         :root {
             --primary: #0284c7;
@@ -1030,6 +1031,302 @@
             .filter-panel { top: 56px; padding: 8px; }
             body { padding-bottom: 110px; }
         }
+    
+        /* ---------------------------------------------------- */
+        /* Dark Mode Theme Definitions                          */
+        /* ---------------------------------------------------- */
+        [data-theme="dark"] {
+            --bg: #0b1120;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --navy: #0f172a;
+            --navy-light: #1e293b;
+        }
+        [data-theme="dark"] body {
+            background: #0b1120;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .brand-nav-card,
+        [data-theme="dark"] .filter-panel,
+        [data-theme="dark"] .product-card,
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .products-table-wrap,
+        [data-theme="dark"] .guide-step-card,
+        [data-theme="dark"] .cart-summary-box {
+            background: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .search-input,
+        [data-theme="dark"] .select-filter,
+        [data-theme="dark"] .order-qty-input {
+            background: #0f172a;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .brand-pill {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .brand-pill.active {
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+        }
+        [data-theme="dark"] .dept-pill {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .dept-pill.active {
+            background: #0f172a;
+            color: #38bdf8;
+            border-color: #0284c7;
+        }
+        [data-theme="dark"] .deal-btn {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .deal-btn.active {
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+        }
+        [data-theme="dark"] .prod-table th {
+            background: #0f172a;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .prod-table td {
+            background: #1e293b;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .prod-table tr:hover td {
+            background: #24344d;
+        }
+        [data-theme="dark"] .prices-box {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .card-code {
+            background: #0369a1;
+            color: #f0f9ff;
+        }
+        [data-theme="dark"] .card-cat-tag {
+            background: #334155;
+            color: #cbd5e1;
+        }
+        [data-theme="dark"] .mode-switch-group {
+            background: #0f172a;
+        }
+        [data-theme="dark"] .bottom-mobile-nav {
+            background: #1e293b;
+            border-top-color: #334155;
+        }
+        [data-theme="dark"] .mob-nav-item {
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .mob-nav-item.active {
+            color: #38bdf8;
+        }
+        [data-theme="dark"] .lang-switch-group {
+            background: #0f172a;
+        }
+        [data-theme="dark"] .lang-btn {
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .lang-btn.active {
+            background: #334155;
+            color: white;
+        }
+        [data-theme="dark"] .view-btn {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .view-btn.active {
+            background: #334155;
+            color: white;
+        }
+
+        /* Product Badges */
+        .card-badge-container {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 2;
+        }
+        .smart-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .badge-bestseller {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+        }
+        .badge-superprofit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+        }
+        .badge-budget {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #ffffff;
+        }
+
+        /* Favorites Star Button */
+        .fav-card-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.15s;
+        }
+        .fav-card-btn:hover {
+            transform: scale(1.15);
+        }
+        .fav-card-btn.active {
+            background: #fef08a;
+            border-color: #facc15;
+            color: #ca8a04;
+        }
+        [data-theme="dark"] .fav-card-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #475569;
+        }
+
+        /* Promo Card Button on Cards */
+        .btn-card-promo {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: white;
+            border: none;
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s;
+        }
+        .btn-card-promo:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(139, 92, 246, 0.35);
+        }
+
+        /* Barcode Scanner Button in Search */
+        .barcode-scan-btn {
+            position: absolute;
+            left: 32px;
+            background: transparent;
+            border: none;
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            color: var(--text-muted);
+            transition: transform 0.15s;
+        }
+        .barcode-scan-btn:hover {
+            transform: scale(1.15);
+            color: var(--primary);
+        }
+
+        /* Live ROI & MOQ Bar in Cart */
+        .roi-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .roi-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        [data-theme="dark"] .roi-card {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        .roi-card-label {
+            font-size: 0.74rem;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .roi-card-value {
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+        .moq-progress-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+        [data-theme="dark"] .moq-progress-box {
+            background: #052e16;
+            border-color: #166534;
+        }
+        .moq-progress-bar-wrap {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+        [data-theme="dark"] .moq-progress-bar-wrap {
+            background: #1e293b;
+        }
+        .moq-progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .merchant-settings-card {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            text-align: right;
+        }
+        [data-theme="dark"] .merchant-settings-card {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
     </style>
 </head>
 <body>
@@ -1059,6 +1356,13 @@
                 🔄 إكسيل
                 <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display:none;" onchange="handleExcelUpload(event)">
             </label>
+            
+            <button id="btnThemeToggle" class="hdr-btn" style="background:#334155; color:#f8fafc; padding:7px 10px;" onclick="toggleTheme()" title="تبديل الوضع الليلي / الفاتح">
+                <span id="themeIcon">🌙</span>
+            </button>
+            <button class="hdr-btn" style="background:#7c3aed; color:white;" onclick="openOrderHistoryModal()" title="سجل الطلبيات السابقة">
+                📜 الطلبات السابقة
+            </button>
             <button class="hdr-btn cart-btn" onclick="openCartModal()">
                 🛒 السلة <span id="cartCount" class="cart-count">0</span>
             </button>
@@ -1100,7 +1404,8 @@
         <div class="search-row">
             <div class="search-input-wrap">
                 <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث بكود الصنف SKU (مثال: 005 أو 868 أو DC-00-5)، الاسم، أو الماركة..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="onSearchInput(this)">
-                <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()">✕</button>
+                <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()" title="مسح البحث">✕</button>
+                <button type="button" id="btnBarcodeScan" class="barcode-scan-btn" onclick="openBarcodeScanner()" title="مسح باركود الصنف بالكاميرا">📷</button>
             </div>
             <select id="brandSelect" class="select-filter" onchange="onBrandSelectChange(this.value)">
                 <option value="">جميع الماركات</option>
@@ -1129,6 +1434,10 @@
         </div>
         <div class="quick-deals-row">
             <button class="deal-btn active" onclick="setDealFilter('ALL', this)">🌟 جميع الأصناف</button>
+            <button class="deal-btn" id="btnDealFavorites" onclick="setDealFilter('FAVORITES', this)">⭐ المفضلة (<span id="favPillCount">0</span>)</button>
+            <button class="deal-btn" onclick="setDealFilter('BEST_SELLER', this)">🔥 الأكثر طلباً</button>
+            <button class="deal-btn" onclick="setDealFilter('BUDGET_UNDER_150', this)">⚡ اقتصادي (&lt;150 ج.م)</button>
+
             <button class="deal-btn wholesale-only" onclick="setDealFilter('HIGH_MARGIN', this)">🔥 ربح عالي (+30%)</button>
             <button class="deal-btn" onclick="setDealFilter('UNDER_500', this)">⚡ أقل من 500 ج.م</button>
             <button class="deal-btn" onclick="setDealFilter('PREMIUM', this)">⭐ أصناف مميزة (+2000 ج.م)</button>
@@ -1201,7 +1510,60 @@
             <button onclick="closeCartModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
         <div class="modal-body">
+
+            <!-- Live ROI Dashboard in Cart -->
+            <div class="roi-dashboard-grid wholesale-only">
+                <div class="roi-card">
+                    <div class="roi-card-label">رأس المال (جملة)</div>
+                    <div class="roi-card-value" id="cartDealerTotal" style="color:var(--text-main);">0 ج.م</div>
+                </div>
+                <div class="roi-card">
+                    <div class="roi-card-label">عائد البيع (قطاعي)</div>
+                    <div class="roi-card-value" id="cartUserTotal" style="color:#0284c7;">0 ج.م</div>
+                </div>
+                <div class="roi-card">
+                    <div class="roi-card-label">صافي ربح التاجر</div>
+                    <div class="roi-card-value" id="cartProfitTotal" style="color:#10b981;">+0 ج.م</div>
+                </div>
+                <div class="roi-card">
+                    <div class="roi-card-label">نسبة العائد (ROI)</div>
+                    <div class="roi-card-value" id="cartRoiPercent" style="color:#f59e0b;">0%</div>
+                </div>
+            </div>
+
+            <!-- MOQ Progress Bar -->
+            <div class="moq-progress-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:800;">
+                    <span id="moqTitleText">🚚 الحد الأدنى للطلبية (3,000 ج.م)</span>
+                    <span id="moqPercentText" style="color:#059669;">0%</span>
+                </div>
+                <div class="moq-progress-bar-wrap">
+                    <div id="moqProgressFill" class="moq-progress-bar-fill"></div>
+                </div>
+                <div id="moqDescText" style="font-size:0.75rem; color:#64748b;">أضف أصنافاً للوصول للحد الأدنى المعتمد وتفعيل خصومات الجملة.</div>
+            </div>
+
+            <!-- Volume Bonus Indicator -->
+            <div id="volumeBonusBox" style="display:none; background:#fef3c7; border:1px solid #fde047; padding:8px 12px; border-radius:9px; margin-bottom:12px; font-size:0.82rem; font-weight:800; color:#b45309; text-align:center;">
+                🎉 مبروك! طلبيتك مؤهلة لبونص إضافي 3% على كامل الفاتورة (+<span id="volumeBonusAmount">0</span> ج.م)!
+            </div>
+
+            <!-- Items List -->
             <div id="cartItemsList"></div>
+
+            <!-- White-Label Merchant Branding Section -->
+            <div class="merchant-settings-card">
+                <div style="font-weight:800; font-size:0.86rem; color:var(--text-main); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+                    <span>🏢</span>
+                    <span>بيانات محلك لطباعة عرض أسعار وفاتورة رسمية لزبائنك:</span>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <input type="text" id="merchantShopNameInput" placeholder="اسم معرضك / شركتك (مثال: تكنو شوب)" class="search-input" style="flex:1; min-width:140px; padding:6px 10px; font-size:0.82rem;" oninput="saveMerchantBranding()">
+                    <input type="text" id="merchantShopPhoneInput" placeholder="رقم الهاتف / الواتساب" class="search-input" style="flex:1; min-width:120px; padding:6px 10px; font-size:0.82rem;" oninput="saveMerchantBranding()">
+                    <input type="text" id="merchantShopAddressInput" placeholder="العنوان / المحافظة" class="search-input" style="flex:1; min-width:120px; padding:6px 10px; font-size:0.82rem;" oninput="saveMerchantBranding()">
+                </div>
+            </div>
+
         </div>
         <div class="modal-footer">
             <div class="cart-summary-box">
@@ -1389,6 +1751,94 @@
     </div>
 </div>
 
+
+<!-- Barcode Scanner Modal -->
+<div id="barcodeScannerModal" class="modal-overlay" onclick="if(event.target===this) closeBarcodeScanner()">
+    <div class="modal-content" style="max-width:440px; text-align:center;">
+        <div class="modal-header" style="background:#0f172a;">
+            <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+                <span>📷</span><span>ماسح الباركود بالكاميرا</span>
+            </div>
+            <button onclick="closeBarcodeScanner()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:16px;">
+            <div id="scannerReader" style="width:100%; min-height:260px; background:#000; border-radius:12px; overflow:hidden; position:relative;">
+                <div id="scannerLoading" style="color:#94a3b8; padding:80px 20px;">جاري فتح الكاميرا...</div>
+            </div>
+            <div id="scannerFeedback" style="margin-top:10px; font-weight:700; font-size:0.88rem; color:#0284c7;">
+                وجّه كاميرا هاتفك نحو باركود أو كود علبة الصنف
+            </div>
+            <div style="margin-top:14px; display:flex; gap:8px;">
+                <input type="text" id="manualBarcodeInput" placeholder="أو اكتب كود الصنف أو الباركود..." class="search-input" style="padding:8px 12px; font-size:0.88rem;">
+                <button onclick="handleManualBarcodeSearch()" style="background:var(--primary); color:white; border:none; padding:8px 14px; border-radius:8px; font-weight:800; cursor:pointer;">بحث</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Promo Card Generator Modal -->
+<div id="promoCardModal" class="modal-overlay" onclick="if(event.target===this) closePromoCardModal()">
+    <div class="modal-content" style="max-width:540px;">
+        <div class="modal-header" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+                <span>🎨</span><span>صانع كروت وبوستات السوشيال ميديا للزبائن</span>
+            </div>
+            <button onclick="closePromoCardModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:14px; text-align:center;">
+            <div style="background:#f1f5f9; padding:8px; border-radius:12px; margin-bottom:12px; display:inline-block;">
+                <canvas id="promoCanvas" width="1080" height="1080" style="max-width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:block;"></canvas>
+            </div>
+            <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:12px; text-align:right;">
+                <div style="font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">تخصيص الكارت قبل النشر:</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+                    <div style="flex:1; min-width:120px;">
+                        <label style="font-size:0.75rem; color:#64748b;">سعر البيع المعروض (ج.م):</label>
+                        <input type="number" id="promoCustomPrice" class="search-input" style="padding:6px 10px; font-weight:800; font-size:0.95rem; color:#0284c7;" oninput="drawPromoCanvas()">
+                    </div>
+                    <div style="flex:1; min-width:120px;">
+                        <label style="font-size:0.75rem; color:#64748b;">اسم محلك في الكارت:</label>
+                        <input type="text" id="promoCustomShop" class="search-input" style="padding:6px 10px; font-weight:700; font-size:0.88rem;" oninput="drawPromoCanvas()">
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:120px;">
+                        <label style="font-size:0.75rem; color:#64748b;">رقم التواصل والطلب:</label>
+                        <input type="text" id="promoCustomPhone" class="search-input" style="padding:6px 10px; font-weight:700; font-size:0.88rem;" oninput="drawPromoCanvas()">
+                    </div>
+                    <div style="flex:1; min-width:120px;">
+                        <label style="font-size:0.75rem; color:#64748b;">عبارة ترويجية:</label>
+                        <input type="text" id="promoCustomBadge" value="🔥 متوفر الآن بأفضل سعر" class="search-input" style="padding:6px 10px; font-weight:700; font-size:0.88rem;" oninput="drawPromoCanvas()">
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button onclick="downloadPromoCard()" style="flex:1; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; padding:10px 14px; border-radius:9px; font-weight:800; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <span>📥</span><span>تحميل كصورة (PNG)</span>
+                </button>
+                <button onclick="sharePromoCard()" style="flex:1; background:#25d366; color:white; border:none; padding:10px 14px; border-radius:9px; font-weight:800; font-size:0.92rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <span>📲</span><span>مشاركة واتساب / ستوري</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order History Modal -->
+<div id="orderHistoryModal" class="modal-overlay" onclick="if(event.target===this) closeOrderHistoryModal()">
+    <div class="modal-content" style="max-width:560px;">
+        <div class="modal-header" style="background:#7c3aed;">
+            <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+                <span>📜</span><span>سجل الطلبيات السابقة</span>
+            </div>
+            <button onclick="closeOrderHistoryModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:16px;">
+            <div id="orderHistoryList"></div>
+        </div>
+    </div>
+</div>
+
 <div id="imgModal" class="modal-overlay" onclick="closeImgModal()" style="z-index:3500;">
     <div style="position:relative; max-width:90vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
         <img id="lightboxImg" src="" style="max-width:94vw; max-height:88vh; object-fit:contain; border-radius:14px; background:white; padding:12px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
@@ -1400,6 +1850,11 @@
 </script>
 
 <script>
+
+// =============================================================
+// 2B B2B Catalog 2026 - Master Application Engine
+// =============================================================
+
 function esc(str) {
     if (str === null || str === undefined) return '';
     return String(str)
@@ -1420,33 +1875,94 @@ function showToast(msg) {
 }
 
 // -------------------------------------------------------------
-// Advanced Arabic & Code Normalization System
+// 1. Theme / Dark Mode Management
+// -------------------------------------------------------------
+let currentTheme = localStorage.getItem('b2b_theme') || 'light';
+
+function initTheme() {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const iconEl = document.getElementById('themeIcon');
+    if (iconEl) {
+        iconEl.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    localStorage.setItem('b2b_theme', currentTheme);
+    updateThemeIcon();
+    showToast(currentTheme === 'dark' ? '🌙 تم تفعيل الوضع الليلي' : '☀️ تم تفعيل الوضع الفاتح');
+}
+
+// -------------------------------------------------------------
+// 2. Favorites (⭐) Management
+// -------------------------------------------------------------
+let favoritesList = [];
+try {
+    favoritesList = JSON.parse(localStorage.getItem('b2b_favorites')) || [];
+} catch(e) {
+    favoritesList = [];
+}
+
+function isFavorite(code) {
+    return favoritesList.includes(code);
+}
+
+function toggleFavorite(code) {
+    const idx = favoritesList.indexOf(code);
+    if (idx > -1) {
+        favoritesList.splice(idx, 1);
+        showToast('☆ تم حذف الصنف من المفضلة');
+    } else {
+        favoritesList.push(code);
+        showToast('⭐ تمت إضافة الصنف إلى المفضلة!');
+    }
+    localStorage.setItem('b2b_favorites', JSON.stringify(favoritesList));
+    updateFavoritesBadge();
+    
+    // Update star buttons on page
+    document.querySelectorAll(`.fav-card-btn[data-code="${code}"]`).forEach(btn => {
+        btn.classList.toggle('active', isFavorite(code));
+        btn.innerHTML = isFavorite(code) ? '⭐' : '☆';
+    });
+
+    if (currentDealFilter === 'FAVORITES') {
+        applyFiltersAndRender();
+    }
+}
+
+function updateFavoritesBadge() {
+    const el = document.getElementById('favPillCount');
+    if (el) el.textContent = favoritesList.length;
+}
+
+// -------------------------------------------------------------
+// 3. Advanced Arabic & Code Normalization System
 // -------------------------------------------------------------
 function normalizeText(text) {
     if (text === null || text === undefined) return '';
     let s = String(text);
-    // Remove invisible unicode characters (LTR, RTL, zero-width, BOM, non-breaking spaces)
     s = s.replace(/[\u200B-\u200F\u202A-\u202E\uFEFF\u00A0]/g, ' ');
-    // Convert Eastern Arabic digits ٠١٢٣٤٥٦٧٨٩ to 0123456789
     const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
     for (let i = 0; i < arabicDigits.length; i++) {
         s = s.split(arabicDigits[i]).join(String(i));
     }
-    // Normalize Arabic letters
     s = s.replace(/[أإآٱ]/g, 'ا')
          .replace(/ة/g, 'ه')
          .replace(/ى/g, 'ي')
          .replace(/[ؤئ]/g, 'ء')
-         // Strip Arabic tashkeel / diacritics
          .replace(/[\u064B-\u065F\u0670]/g, '')
-         // Strip tatweel
          .replace(/ـ/g, '');
     return s.toLowerCase().trim();
 }
 
 function cleanCode(codeStr) {
     const s = normalizeText(codeStr);
-    // Keep only alphanumeric characters (a-z, 0-9)
     return s.replace(/[^a-z0-9]/g, '');
 }
 
@@ -1495,7 +2011,7 @@ const SEARCH_SYNONYMS = {
     'حامل': ['stand', 'holder']
 };
 
-// Global Products Data & Product Index Lookup
+// Global Products Data & Index
 let products = [];
 let productByCode = {};
 let brandCountsCache = {};
@@ -1512,7 +2028,7 @@ function indexProducts() {
         const c = (p.category_en || 'Other Accessories').trim();
         categoryCountsCache[c] = (categoryCountsCache[c] || 0) + 1;
 
-        // Fast search indexing
+        // Search Indexing
         p._norm_code = normalizeText(p.code || '');
         p._clean_code = cleanCode(p.code || '');
         const p_name = normalizeText(p.name || '');
@@ -1534,7 +2050,7 @@ try {
     console.error('Failed to parse products JSON:', e);
 }
 
-// Instant In-Memory Image Fallback - No failed network requests!
+// Instant In-Memory Image Fallback
 function handleDynamicImageError(img) {
     img.onerror = null;
     const code = (img.getAttribute('data-code') || '').trim();
@@ -1572,8 +2088,8 @@ function matchCategory(product, deptKey) {
 }
 
 // App State
-let mainGroupingMode = 'brands'; // 'brands' or 'categories'
-let currentBrand = ''; // '' = all
+let mainGroupingMode = 'brands';
+let currentBrand = '';
 let currentCategory = 'ALL';
 let currentDealFilter = 'ALL';
 let descLang = localStorage.getItem('catalog_desc_lang') || 'both';
@@ -1603,14 +2119,19 @@ let isClientMode = false;
 let cart = {};
 let deferredPrompt = null;
 
-// Virtual pagination for instant 60fps rendering
+// Virtual pagination for 60fps rendering
 const PAGE_SIZE = 36;
 let currentFilteredList = [];
 let renderedCount = 0;
 let lastSearchQuery = '';
 
 function init() {
+    initTheme();
     updateLangButtonsUI();
+    updateFavoritesBadge();
+    loadMerchantBranding();
+    setupNetworkStatusListener();
+
     if (!products || products.length === 0) {
         document.getElementById('catalogContentContainer').innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444; font-size: 1.2rem;">تنبيه: لم يتم تحميل بيانات المنتجات.</div>';
         return;
@@ -1689,7 +2210,6 @@ function populateBrandSelect() {
     });
 }
 
-// Switch between Brand grouping vs Category grouping
 function switchMainGrouping(mode) {
     mainGroupingMode = mode;
     const btnBr = document.getElementById('btnModeBrand');
@@ -1713,7 +2233,6 @@ function switchMainGrouping(mode) {
     applyFiltersAndRender();
 }
 
-// Instant 0.01s Brand Jump
 function selectBrand(brand) {
     currentBrand = (brand || '').trim();
     const sel = document.getElementById('brandSelect');
@@ -1752,7 +2271,6 @@ function resetAllFilters() {
     applyFiltersAndRender();
 }
 
-// Reset brand/category filters but KEEP the search query
 function resetFiltersKeepSearch() {
     currentBrand = '';
     currentCategory = 'ALL';
@@ -1768,14 +2286,12 @@ function resetFiltersKeepSearch() {
     showToast('✨ تم إلغاء الفلاتر والبحث في الكتالوج بالكامل');
 }
 
-// Instant Search with Code Click
 function quickSearchCode(code) {
     const sInput = document.getElementById('searchInput');
     if (sInput && code) {
         sInput.value = code;
         const clrBtn = document.getElementById('clearSearchBtn');
         if (clrBtn) clrBtn.style.display = 'flex';
-        // Auto reset brand filter to show across all brands
         currentBrand = '';
         currentCategory = 'ALL';
         const sel = document.getElementById('brandSelect');
@@ -1793,7 +2309,6 @@ function quickSearchCode(code) {
     }
 }
 
-// Debounce search for speed
 let searchDebounceTimer = null;
 function onSearchInput(input) {
     const val = input ? input.value : (document.getElementById('searchInput')?.value || '');
@@ -1856,13 +2371,13 @@ function togglePresentationMode() {
     if (isClientMode) {
         btn.innerHTML = '💼 وضع التاجر';
         btn.classList.add('active-client');
-        banner.style.display = 'block';
+        if (banner) banner.style.display = 'block';
         document.querySelectorAll('.wholesale-only').forEach(el => el.style.display = 'none');
         showToast('👁️ تم إخفاء أسعار التاجر (وضع الزبون)');
     } else {
         btn.innerHTML = '👁️ وضع الزبون';
         btn.classList.remove('active-client');
-        banner.style.display = 'none';
+        if (banner) banner.style.display = 'none';
         document.querySelectorAll('.wholesale-only').forEach(el => el.style.display = '');
         showToast('💼 تم إظهار أسعار التاجر وهوامش الربح');
     }
@@ -1870,7 +2385,7 @@ function togglePresentationMode() {
 }
 
 // -------------------------------------------------------------
-// Master Filter & Smart Search Logic
+// 4. Master Filter & Smart Search Logic
 // -------------------------------------------------------------
 let globalAlternativesCount = 0;
 
@@ -1885,7 +2400,7 @@ function applyFiltersAndRender() {
     let hasAnyCodeMatch = false;
 
     let filtered = products.filter(p => {
-        // 1. Check direct SKU / Code match (Exact or partial without hyphens/spaces or with Arabic numbers)
+        // Direct SKU Match
         let isCodeMatch = false;
         if (cleanSearchQuery) {
             if (p._clean_code === cleanSearchQuery) {
@@ -1897,20 +2412,28 @@ function applyFiltersAndRender() {
             }
         }
 
-        // Direct code match ALWAYS matches across the entire catalog (overrides brand/category conflicts)
         if (isCodeMatch) {
             hasAnyCodeMatch = true;
             return true;
         }
 
-        // Deal Filters
-        if (currentDealFilter === 'HIGH_MARGIN' && p.margin_pct < 30) return false;
-        if (currentDealFilter === 'UNDER_500' && p.dealer_price >= 500) return false;
-        if (currentDealFilter === 'PREMIUM' && p.dealer_price < 2000) return false;
+        // Deal & Special Filters
+        if (currentDealFilter === 'FAVORITES') {
+            if (!isFavorite(p.code)) return false;
+        } else if (currentDealFilter === 'HIGH_MARGIN') {
+            if (p.margin_pct < 30) return false;
+        } else if (currentDealFilter === 'UNDER_500') {
+            if (p.dealer_price >= 500) return false;
+        } else if (currentDealFilter === 'PREMIUM') {
+            if (p.dealer_price < 2000) return false;
+        } else if (currentDealFilter === 'BEST_SELLER') {
+            if (p.margin_pct < 28 && p.dealer_price > 350) return false;
+        } else if (currentDealFilter === 'BUDGET_UNDER_150') {
+            if (p.dealer_price >= 150) return false;
+        }
 
-        // 2. Search Query Handling (Multi-word + Synonyms + Arabic Normalization)
+        // Search Query Handling
         if (normSearch) {
-            // Apply category & brand filters for text searches
             if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
             if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
 
@@ -1922,7 +2445,6 @@ function applyFiltersAndRender() {
                 if (pSearchable.includes(token) || (tokenClean && p._clean_code.includes(tokenClean))) {
                     continue;
                 }
-                // Check synonyms
                 let synMatch = false;
                 if (SEARCH_SYNONYMS[token]) {
                     for (const syn of SEARCH_SYNONYMS[token]) {
@@ -1937,14 +2459,14 @@ function applyFiltersAndRender() {
             return true;
         }
 
-        // 3. Normal Browsing (No Search Query)
+        // Standard Browsing
         if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
         if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
 
         return true;
     });
 
-    // Check if matches exist across all brands if current filter returned 0
+    // Check if matches exist across all brands
     globalAlternativesCount = 0;
     if (normSearch && filtered.length === 0 && (currentBrand !== '' || currentCategory !== 'ALL')) {
         const tokens = normSearch.split(/\s+/).filter(Boolean);
@@ -2003,7 +2525,6 @@ function applyFiltersAndRender() {
     renderCatalogInitial();
 }
 
-// Initial Batch Render
 function renderCatalogInitial() {
     const container = document.getElementById('catalogContentContainer');
     const loadMoreWrap = document.getElementById('loadMoreWrap');
@@ -2012,27 +2533,36 @@ function renderCatalogInitial() {
     if (!currentFilteredList || currentFilteredList.length === 0) {
         if (globalAlternativesCount > 0) {
             container.innerHTML = `
-                <div style="text-align: center; padding: 36px 20px; background: white; border-radius: 14px; border: 1.5px solid #bae6fd; box-shadow: 0 4px 14px rgba(2,132,199,0.08); margin: 10px 0;">
+                <div style="text-align: center; padding: 36px 20px; background: var(--card-bg); border-radius: 14px; border: 1.5px solid #bae6fd; box-shadow: 0 4px 14px rgba(2,132,199,0.08); margin: 10px 0;">
                     <div style="font-size: 2.2rem; margin-bottom: 8px;">💡</div>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
+                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
                         لم نجد نتائج مطابقة داخل "${esc(currentBrand || currentCategory)}"
                     </div>
-                    <div style="color: #0369a1; font-weight: 700; margin-bottom: 18px; font-size: 0.95rem;">
+                    <div style="color: #0284c7; font-weight: 700; margin-bottom: 18px; font-size: 0.95rem;">
                         ولكن تم العثور على <strong>${globalAlternativesCount} صنف مطابق</strong> في ماركات وأقسام أخرى!
                     </div>
-                    <button onclick="resetFiltersKeepSearch()" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transition: transform 0.15s;">
+                    <button onclick="resetFiltersKeepSearch()" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
                         ✨ عرض النتائج في جميع الماركات (${globalAlternativesCount})
+                    </button>
+                </div>
+            `;
+        } else if (currentDealFilter === 'FAVORITES') {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border);">
+                    <div style="font-size: 2.2rem; margin-bottom: 8px;">⭐</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">قائمة المفضلة فارغة حالياً</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">اضغط على علامة النجمة (⭐) أعلى أي كارت صنف لحفظه في المفضلة لسهولة طلبه لاحقاً.</div>
+                    <button onclick="resetAllFilters()" style="background: #0284c7; color: white; border: none; padding: 8px 18px; border-radius: 9px; font-weight: 700; cursor: pointer;">
+                        تصفح جميع الأصناف
                     </button>
                 </div>
             `;
         } else {
             container.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <div style="text-align: center; padding: 40px 20px; background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border);">
                     <div style="font-size: 2.2rem; margin-bottom: 8px;">🔍</div>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
-                        لا توجد أصناف مطابقة للبحث
-                    </div>
-                    <div style="color: #64748b; font-size: 0.92rem; margin-bottom: 16px;">
+                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">لا توجد أصناف مطابقة للبحث</div>
+                    <div style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 16px;">
                         تأكد من كتابة كود الصنف أو الكلمة بشكل صحيح، أو ابحث برقم الكود مباشرة (مثال: <strong>005</strong> أو <strong>868</strong> أو <strong>729</strong>)
                     </div>
                     <button onclick="resetAllFilters()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 9px; font-weight: 700; cursor: pointer;">
@@ -2045,12 +2575,9 @@ function renderCatalogInitial() {
         return;
     }
 
-    // Determine how many to show initially
     const toRender = currentFilteredList.slice(0, PAGE_SIZE);
     renderedCount = toRender.length;
-
     container.innerHTML = renderItemsBlock(toRender);
-
     updateLoadMoreButton();
 }
 
@@ -2128,6 +2655,7 @@ function renderItemsBlock(items) {
                 <table class="prod-table">
                     <thead>
                         <tr>
+                            <th>⭐</th>
                             <th>الصورة</th>
                             <th>كود الصنف (SKU)</th>
                             <th>الماركة</th>
@@ -2164,6 +2692,18 @@ function renderCardTitleHtml(p) {
     }
 }
 
+function getProductSmartBadges(p) {
+    let badges = [];
+    if (p.margin_pct >= 35) {
+        badges.push('<span class="smart-badge badge-superprofit">💰 ربح +' + p.margin_pct + '%</span>');
+    } else if (p.margin_pct >= 28 && p.dealer_price < 350) {
+        badges.push('<span class="smart-badge badge-bestseller">🔥 الأكثر طلباً</span>');
+    } else if (p.dealer_price < 150) {
+        badges.push('<span class="smart-badge badge-budget">⚡ اقتصادي</span>');
+    }
+    return badges.join('');
+}
+
 function renderSingleCard(p) {
     let priceHtml = '';
     if (isClientMode) {
@@ -2172,7 +2712,7 @@ function renderSingleCard(p) {
                 <div class="price-row client-main" style="justify-content: center;">
                     <span>${(p.user_price || 0).toLocaleString()} ج.م</span>
                 </div>
-                <div style="font-size:0.72rem; color:#64748b;">السعر الرسمي للمستهلك</div>
+                <div style="font-size:0.72rem; color:var(--text-muted);">السعر الرسمي للمستهلك</div>
             </div>
         `;
     } else {
@@ -2195,13 +2735,20 @@ function renderSingleCard(p) {
     }
 
     const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
+    const isFav = isFavorite(p.code);
 
     return `
         <div class="product-card" onclick="openProductModal('${esc(p.code)}')">
+            <button class="fav-card-btn ${isFav ? 'active' : ''}" data-code="${esc(p.code)}" onclick="event.stopPropagation(); toggleFavorite('${esc(p.code)}')" title="إضافة إلى المفضلة">
+                ${isFav ? '⭐' : '☆'}
+            </button>
             <div class="card-img-wrap">
                 <img src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)" alt="${esc(p.name)}">
                 <span class="card-brand-badge">${esc(p.brand)}</span>
                 <span class="card-zoom-hint">🔍 تفاصيل</span>
+                <div class="card-badge-container">
+                    ${getProductSmartBadges(p)}
+                </div>
             </div>
             <div class="card-body">
                 <div>
@@ -2215,6 +2762,11 @@ function renderSingleCard(p) {
                 </div>
                 <div onclick="event.stopPropagation()">
                     ${priceHtml}
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <button class="btn-card-promo" onclick="openPromoCardModal('${esc(p.code)}')">
+                            <span>🎨 كارت للزبائن</span>
+                        </button>
+                    </div>
                     <div class="card-footer">
                         <div class="qty-stepper">
                             <button class="qty-btn" data-code="${esc(p.code)}" onclick="adjustQty(this.getAttribute('data-code'), -1)">−</button>
@@ -2248,14 +2800,21 @@ function renderSingleTableRow(p) {
     let dealerCols = '';
     if (!isClientMode) {
         dealerCols = `
-            <td style="font-weight:800; color:#0f172a; background:#f1f5f9; text-align:center;">${(p.dealer_price || 0).toLocaleString()} ج.م</td>
+            <td style="font-weight:800; color:var(--text-main); background:var(--bg); text-align:center;">${(p.dealer_price || 0).toLocaleString()} ج.م</td>
             <td style="text-align:center;"><span class="profit-pill">+${(p.margin || 0).toLocaleString()} ج.م</span></td>
             <td style="text-align:center; font-weight:700; color:#b45309;">${p.margin_pct}%</td>
         `;
     }
     const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
+    const isFav = isFavorite(p.code);
+
     return `
         <tr onclick="openProductModal('${esc(p.code)}')">
+            <td style="text-align:center;" onclick="event.stopPropagation()">
+                <button class="fav-card-btn ${isFav ? 'active' : ''}" style="position:static; width:26px; height:26px; font-size:0.85rem;" data-code="${esc(p.code)}" onclick="toggleFavorite('${esc(p.code)}')" title="المفضلة">
+                    ${isFav ? '⭐' : '☆'}
+                </button>
+            </td>
             <td style="text-align:center;"><img class="tbl-thumb" src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)"></td>
             <td style="font-weight:800; color:#0284c7; font-family:monospace; font-size:0.86rem; cursor:pointer;" title="اضغط لنسخ الكود والبحث به" onclick="event.stopPropagation(); quickSearchCode('${esc(p.code)}')">
                 ${esc(p.code)} 📋
@@ -2278,11 +2837,9 @@ function renderSingleTableRow(p) {
     `;
 }
 
-// Stepper Adjuster
 function adjustQty(code, delta) {
     const inputGrid = document.getElementById(`qty_${code}`);
     const inputTbl = document.getElementById(`qty_tbl_${code}`);
-    
     if (inputGrid) {
         let v = parseInt(inputGrid.value, 10) || 1;
         v = Math.max(1, v + delta);
@@ -2295,7 +2852,9 @@ function adjustQty(code, delta) {
     }
 }
 
-// Cart Logic
+// -------------------------------------------------------------
+// 5. Cart Management & Live ROI / MOQ Calculations
+// -------------------------------------------------------------
 function addToCartByCode(code) {
     const p = productByCode[code];
     if (!p) return;
@@ -2319,8 +2878,8 @@ function addToCartByCode(code) {
 function updateCartUI() {
     const keys = Object.keys(cart);
     const count = keys.reduce((s, k) => s + cart[k].qty, 0);
-    const countEl = document.getElementById('headerCartCount');
-    const mobCountEl = document.getElementById('mobNavCartBadge');
+    const countEl = document.getElementById('cartCount');
+    const mobCountEl = document.getElementById('mobCartBadge');
     
     if (countEl) countEl.textContent = count;
     if (mobCountEl) {
@@ -2332,22 +2891,15 @@ function updateCartUI() {
 function openCartModal() {
     const modal = document.getElementById('cartModal');
     const itemsContainer = document.getElementById('cartItemsList');
-    const emptyNotice = document.getElementById('cartEmptyNotice');
-    const summaryCard = document.getElementById('cartSummaryCard');
     const keys = Object.keys(cart);
 
+    let totalDealer = 0;
+    let totalUser = 0;
+    let totalProfit = 0;
+
     if (keys.length === 0) {
-        itemsContainer.innerHTML = '';
-        emptyNotice.style.display = 'block';
-        summaryCard.style.display = 'none';
+        itemsContainer.innerHTML = '<div style="text-align:center; padding:30px 10px; color:var(--text-muted); font-size:1rem;">السلة فارغة حالياً. قم بإضافة أصناف لبدء الطلبية.</div>';
     } else {
-        emptyNotice.style.display = 'none';
-        summaryCard.style.display = 'block';
-
-        let totalDealer = 0;
-        let totalUser = 0;
-        let totalProfit = 0;
-
         itemsContainer.innerHTML = keys.map(k => {
             const item = cart[k];
             const p = item.prod;
@@ -2362,33 +2914,69 @@ function openCartModal() {
             const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
 
             return `
-                <div class="cart-item-row">
-                    <img src="${imgSrc}" class="cart-item-thumb" onerror="handleDynamicImageError(this)" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}">
-                    <div class="cart-item-info">
-                        <div style="font-weight: 800; font-size: 0.92rem; color: #0f172a;">${esc(p.brand)} - ${esc(p.code)}</div>
-                        <div style="font-size: 0.8rem; color: #64748b; line-height: 1.3;">${esc(p.name_ar || p.name)}</div>
-                        <div style="font-size: 0.82rem; font-weight: 700; color: #0284c7; margin-top: 4px;">
+                <div class="cart-item-row" style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border);">
+                    <img src="${imgSrc}" class="cart-item-thumb" onerror="handleDynamicImageError(this)" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" style="width:48px; height:48px; object-fit:contain; border-radius:6px; background:white; padding:2px; border:1px solid var(--border);">
+                    <div class="cart-item-info" style="flex:1;">
+                        <div style="font-weight: 800; font-size: 0.9rem; color: var(--text-main);">${esc(p.brand)} - ${esc(p.code)}</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.3;">${esc(p.name_ar || p.name)}</div>
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #0284c7; margin-top: 3px;">
                             ${isClientMode ? (p.user_price || 0).toLocaleString() + ' ج.م' : (p.dealer_price || 0).toLocaleString() + ' ج.م'} للقطعة
                         </div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
-                        <div class="qty-stepper" style="height: 32px;">
-                            <button class="qty-btn" style="width: 28px; height: 28px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty - 1})">−</button>
-                            <input type="number" class="order-qty-input" style="width: 38px; height: 28px; font-size: 0.85rem;" min="1" value="${item.qty}" onchange="updateCartItemQty('${esc(p.code)}', this.value)">
-                            <button class="qty-btn" style="width: 28px; height: 28px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty + 1})">+</button>
+                        <div class="qty-stepper" style="height: 30px;">
+                            <button class="qty-btn" style="width: 26px; height: 26px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty - 1})">−</button>
+                            <input type="number" class="order-qty-input" style="width: 36px; height: 26px; font-size: 0.85rem;" min="1" value="${item.qty}" onchange="updateCartItemQty('${esc(p.code)}', this.value)">
+                            <button class="qty-btn" style="width: 26px; height: 26px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty + 1})">+</button>
                         </div>
-                        <button class="cart-del-btn" onclick="removeCartItem('${esc(p.code)}')">حذف ✕</button>
+                        <button class="cart-del-btn" style="background:none; border:none; color:#ef4444; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="removeCartItem('${esc(p.code)}')">حذف ✕</button>
                     </div>
                 </div>
             `;
         }).join('');
-        
-        const roi = totalDealer > 0 ? ((totalProfit / totalDealer) * 100).toFixed(1) : 0;
-        document.getElementById('cartDealerTotal').textContent = totalDealer.toLocaleString() + ' ج.م';
-        document.getElementById('cartUserTotal').textContent = totalUser.toLocaleString() + ' ج.م';
-        document.getElementById('cartProfitTotal').textContent = `+${totalProfit.toLocaleString()} ج.م`;
-        document.getElementById('cartRoiPercent').textContent = `${roi}%`;
     }
+
+    // Live ROI Calculations
+    const roi = totalDealer > 0 ? ((totalProfit / totalDealer) * 100).toFixed(1) : 0;
+    const dealerTotalEl = document.getElementById('cartDealerTotal');
+    const userTotalEl = document.getElementById('cartUserTotal');
+    const profitTotalEl = document.getElementById('cartProfitTotal');
+    const roiPercentEl = document.getElementById('cartRoiPercent');
+
+    if (dealerTotalEl) dealerTotalEl.textContent = totalDealer.toLocaleString() + ' ج.م';
+    if (userTotalEl) userTotalEl.textContent = totalUser.toLocaleString() + ' ج.م';
+    if (profitTotalEl) profitTotalEl.textContent = `+${totalProfit.toLocaleString()} ج.م`;
+    if (roiPercentEl) roiPercentEl.textContent = `${roi}%`;
+
+    // MOQ Progress Bar (Target: 3,000 EGP)
+    const MOQ_TARGET = 3000;
+    const moqPercent = Math.min(100, Math.round((totalDealer / MOQ_TARGET) * 100));
+    const moqFill = document.getElementById('moqProgressFill');
+    const moqPercentText = document.getElementById('moqPercentText');
+    const moqDescText = document.getElementById('moqDescText');
+
+    if (moqFill) moqFill.style.width = `${moqPercent}%`;
+    if (moqPercentText) moqPercentText.textContent = `${moqPercent}%`;
+    if (moqDescText) {
+        if (totalDealer >= MOQ_TARGET) {
+            moqDescText.innerHTML = '<span style="color:#059669; font-weight:800;">🎉 ممتاز! تم استيفاء الحد الأدنى للطلبية واعتماد أسعار التاجر والشحن.</span>';
+        } else {
+            const rem = MOQ_TARGET - totalDealer;
+            moqDescText.textContent = `متبقي ${rem.toLocaleString()} ج.م لاستيفاء الحد الأدنى للطلبية المعتمدة.`;
+        }
+    }
+
+    // Volume Bonus (3% on >= 10,000 EGP)
+    const volumeBonusBox = document.getElementById('volumeBonusBox');
+    const volumeBonusAmount = document.getElementById('volumeBonusAmount');
+    if (totalDealer >= 10000) {
+        const bonus = Math.round(totalDealer * 0.03);
+        if (volumeBonusAmount) volumeBonusAmount.textContent = bonus.toLocaleString();
+        if (volumeBonusBox) volumeBonusBox.style.display = 'block';
+    } else {
+        if (volumeBonusBox) volumeBonusBox.style.display = 'none';
+    }
+
     modal.style.display = 'flex';
 }
 
@@ -2409,11 +2997,12 @@ function removeCartItem(code) {
 }
 
 function closeCartModal() {
-    document.getElementById('cartModal').style.display = 'none';
+    const modal = document.getElementById('cartModal');
+    if (modal) modal.style.display = 'none';
 }
 
 function clearCart() {
-    if (confirm('إفراغ سلة الطلبية؟')) {
+    if (confirm('هل تريد إفراغ سلة الطلبية بالكامل؟')) {
         cart = {};
         updateCartUI();
         openCartModal();
@@ -2421,23 +3010,25 @@ function clearCart() {
     }
 }
 
-function sendWhatsAppOrder() {
-    const keys = Object.keys(cart);
-    if (keys.length === 0) {
-        alert('السلة فارغة!');
-        return;
-    }
-    let msg = "السلام عليكم ورحمة الله، طلبية بضاعة من كتالوج 2B:\n\n";
-    let total = 0;
-    keys.forEach((k, idx) => {
-        const item = cart[k];
-        const p = item.prod;
-        const priceToUse = isClientMode ? p.user_price : p.dealer_price;
-        msg += `${idx+1}. [${p.code}] ${p.brand} - ${p.name} | الكمية: ${item.qty} | السعر: ${priceToUse} ج.م\n`;
-        total += priceToUse * item.qty;
-    });
-    msg += `\nإجمالي قيمة الطلبية: ${total.toLocaleString()} ج.م\nبرجاء التأكيد وتجهيز الفاتورة.`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+// -------------------------------------------------------------
+// 6. Merchant White-Label Branding & Quotations
+// -------------------------------------------------------------
+function saveMerchantBranding() {
+    const shopName = document.getElementById('merchantShopNameInput')?.value || '';
+    const shopPhone = document.getElementById('merchantShopPhoneInput')?.value || '';
+    const shopAddress = document.getElementById('merchantShopAddressInput')?.value || '';
+    localStorage.setItem('b2b_shop_name', shopName);
+    localStorage.setItem('b2b_shop_phone', shopPhone);
+    localStorage.setItem('b2b_shop_address', shopAddress);
+}
+
+function loadMerchantBranding() {
+    const shopName = localStorage.getItem('b2b_shop_name') || '';
+    const shopPhone = localStorage.getItem('b2b_shop_phone') || '';
+    const shopAddress = localStorage.getItem('b2b_shop_address') || '';
+    if (document.getElementById('merchantShopNameInput')) document.getElementById('merchantShopNameInput').value = shopName;
+    if (document.getElementById('merchantShopPhoneInput')) document.getElementById('merchantShopPhoneInput').value = shopPhone;
+    if (document.getElementById('merchantShopAddressInput')) document.getElementById('merchantShopAddressInput').value = shopAddress;
 }
 
 function printQuotation() {
@@ -2445,58 +3036,68 @@ function printQuotation() {
     if (keys.length === 0) return alert('السلة فارغة!');
     const today = new Date().toISOString().split('T')[0];
     let total = 0;
+
+    const shopName = localStorage.getItem('b2b_shop_name') || 'معرض الأجهزة والإكسسوارات المعتمد';
+    const shopPhone = localStorage.getItem('b2b_shop_phone') || '';
+    const shopAddress = localStorage.getItem('b2b_shop_address') || '';
     
     let tableRows = keys.map((k, idx) => {
         const item = cart[k];
         const p = item.prod;
-        const price = isClientMode ? p.user_price : p.dealer_price;
+        // Always print with consumer retail price so merchant can hand it to customers safely
+        const price = p.user_price;
         const lineTotal = price * item.qty;
         total += lineTotal;
         return `
             <tr>
-                <td style="text-align:center; padding:6px; border:1px solid #cbd5e1;">${idx+1}</td>
-                <td style="padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${esc(p.code)}</td>
-                <td style="padding:6px; border:1px solid #cbd5e1;">${esc(p.brand)}</td>
-                <td style="padding:6px; border:1px solid #cbd5e1;">${esc(p.name)}</td>
-                <td style="text-align:center; padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${item.qty}</td>
-                <td style="text-align:right; padding:6px; border:1px solid #cbd5e1;">${price.toLocaleString()} ج.م</td>
-                <td style="text-align:right; padding:6px; border:1px solid #cbd5e1; font-weight:bold;">${lineTotal.toLocaleString()} ج.م</td>
+                <td style="text-align:center; padding:7px; border:1px solid #cbd5e1;">${idx+1}</td>
+                <td style="padding:7px; border:1px solid #cbd5e1; font-weight:bold; font-family:monospace;">${esc(p.code)}</td>
+                <td style="padding:7px; border:1px solid #cbd5e1;">${esc(p.brand)}</td>
+                <td style="padding:7px; border:1px solid #cbd5e1;">${esc(p.name)}</td>
+                <td style="text-align:center; padding:7px; border:1px solid #cbd5e1; font-weight:bold;">${item.qty}</td>
+                <td style="text-align:right; padding:7px; border:1px solid #cbd5e1;">${price.toLocaleString()} ج.م</td>
+                <td style="text-align:right; padding:7px; border:1px solid #cbd5e1; font-weight:bold;">${lineTotal.toLocaleString()} ج.م</td>
             </tr>
         `;
     }).join('');
 
     const printHtml = `
-        <div style="font-family:'Cairo', sans-serif; direction:rtl; padding:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:16px;">
+        <div style="font-family:'Cairo', sans-serif; direction:rtl; padding:20px; color:#0f172a;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #0f172a; padding-bottom:12px; margin-bottom:16px;">
                 <div>
-                    <h2 style="margin:0; color:#0f172a;">2B B2B | أمر توريد / عرض أسعار رسمي</h2>
-                    <p style="margin:3px 0 0 0; color:#64748b; font-size:13px;">تاريخ العرض: ${today} | كود الطلبية: ORD-${Math.floor(1000 + Math.random() * 9000)}</p>
+                    <h2 style="margin:0; font-size:22px; color:#0f172a;">${esc(shopName)}</h2>
+                    <p style="margin:4px 0 0 0; color:#475569; font-size:13px;">${shopPhone ? '📞 هاتف: ' + esc(shopPhone) : ''} ${shopAddress ? ' | 📍 ' + esc(shopAddress) : ''}</p>
+                    <p style="margin:2px 0 0 0; color:#64748b; font-size:12px;">عرض أسعار رسمي معتمد لعام 2026 | رقم العرض: QUO-${Math.floor(1000 + Math.random() * 9000)} | التاريخ: ${today}</p>
                 </div>
                 <div style="text-align:left;">
-                    <div style="font-weight:bold; font-size:18px; color:#f37021;">2B Official Partner</div>
-                    <div style="font-size:11px; color:#64748b;">قائمة أسعار معتمدة 2026</div>
+                    <div style="font-weight:900; font-size:18px; color:#f37021;">2B Partner</div>
+                    <div style="font-size:11px; color:#64748b;">منتجات أصلية بضمان معتمد</div>
                 </div>
             </div>
             <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:16px;">
                 <thead>
                     <tr style="background:#0f172a; color:white;">
-                        <th style="padding:6px; border:1px solid #0f172a;">م</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">الكود</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">الماركة</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">اسم الصنف</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">الكمية</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">السعر</th>
-                        <th style="padding:6px; border:1px solid #0f172a;">الإجمالي</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">م</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">كود الصنف</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">الماركة</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">اسم ومواصفات الصنف</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">الكمية</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">السعر</th>
+                        <th style="padding:8px; border:1px solid #0f172a;">الإجمالي</th>
                     </tr>
                 </thead>
                 <tbody>${tableRows}</tbody>
                 <tfoot>
                     <tr style="background:#f1f5f9; font-size:14px; font-weight:bold;">
-                        <td colspan="6" style="text-align:left; padding:8px; border:1px solid #cbd5e1;">الإجمالي الكلي:</td>
-                        <td style="text-align:right; padding:8px; border:1px solid #cbd5e1; color:#0f172a;">${total.toLocaleString()} ج.م</td>
+                        <td colspan="6" style="text-align:left; padding:10px; border:1px solid #cbd5e1;">الإجمالي النهائي المستحق:</td>
+                        <td style="text-align:right; padding:10px; border:1px solid #cbd5e1; color:#0f172a; font-size:16px;">${total.toLocaleString()} ج.م</td>
                     </tr>
                 </tfoot>
             </table>
+            <div style="margin-top:20px; font-size:11px; color:#64748b; border-top:1px dashed #cbd5e1; padding-top:8px; display:flex; justify-content:space-between;">
+                <div>* الأسعار سارية وفقاً للكميات المتاحة في المخزن | بضاعة أصلية بضمان رسمي</div>
+                <div>شكراً لتعاملكم معنا!</div>
+            </div>
         </div>
     `;
 
@@ -2527,7 +3128,394 @@ function exportCartExcel() {
     document.body.removeChild(link);
 }
 
-// Lightbox & Product Modal
+// -------------------------------------------------------------
+// 7. Order History & 1-Click Reorder
+// -------------------------------------------------------------
+function saveOrderToHistory(orderData) {
+    try {
+        let history = JSON.parse(localStorage.getItem('b2b_order_history')) || [];
+        history.unshift(orderData);
+        if (history.length > 30) history = history.slice(0, 30);
+        localStorage.setItem('b2b_order_history', JSON.stringify(history));
+    } catch(e) {
+        console.error('Failed to save order history:', e);
+    }
+}
+
+function sendWhatsAppOrder() {
+    const keys = Object.keys(cart);
+    if (keys.length === 0) {
+        alert('السلة فارغة!');
+        return;
+    }
+    const today = new Date().toLocaleDateString('ar-EG');
+    const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+    
+    let msg = `السلام عليكم ورحمة الله، طلبية بضاعة من كتالوج 2B لعام 2026 (${orderId}):\n\n`;
+    let total = 0;
+    const orderItems = [];
+
+    keys.forEach((k, idx) => {
+        const item = cart[k];
+        const p = item.prod;
+        const priceToUse = isClientMode ? p.user_price : p.dealer_price;
+        msg += `${idx+1}. [${p.code}] ${p.brand} - ${p.name} | الكمية: ${item.qty} | السعر: ${priceToUse} ج.م\n`;
+        total += priceToUse * item.qty;
+        orderItems.push({ code: p.code, name: p.name, brand: p.brand, qty: item.qty, price: priceToUse });
+    });
+
+    const shopName = localStorage.getItem('b2b_shop_name') || '';
+    if (shopName) msg += `\nالمحل / العميل: ${shopName}`;
+    msg += `\nإجمالي قيمة الطلبية: ${total.toLocaleString()} ج.م\nبرجاء التأكيد وتجهيز الفاتورة.`;
+
+    // Save to Order History
+    saveOrderToHistory({
+        id: orderId,
+        date: today,
+        total: total,
+        itemsCount: keys.length,
+        items: orderItems
+    });
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function openOrderHistoryModal() {
+    const modal = document.getElementById('orderHistoryModal');
+    const container = document.getElementById('orderHistoryList');
+    if (!modal || !container) return;
+
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem('b2b_order_history')) || [];
+    } catch(e) { history = []; }
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
+                <div style="font-size:2rem; margin-bottom:8px;">📜</div>
+                <div style="font-weight:700;">لا توجد طلبيات سابقة مسجلة.</div>
+                <div style="font-size:0.85rem; margin-top:4px;">عند إرسال طلبيات عبر واتساب سيتم حفظها هنا تلقائياً لسهولة تكرارها.</div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = history.map((ord, idx) => {
+            return `
+                <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-weight:800;">
+                        <span style="color:#7c3aed;">${esc(ord.id)}</span>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">${esc(ord.date)}</span>
+                    </div>
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">
+                        عدد الأصناف: <strong>${ord.itemsCount} صنف</strong> | القيمة: <strong style="color:var(--text-main);">${Number(ord.total).toLocaleString()} ج.م</strong>
+                    </div>
+                    <div style="font-size:0.8rem; color:#64748b; line-height:1.4; margin-bottom:10px;">
+                        ${ord.items.slice(0, 3).map(it => `• [${it.code}] ${it.brand} (${it.qty} ق)`).join('<br>')}
+                        ${ord.items.length > 3 ? `<em>و ${ord.items.length - 3} أصناف أخرى...</em>` : ''}
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="reorderPreviousOrder(${idx})" style="flex:1; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                            <span>🔄</span><span>إعادة طلب هذه الشحنة</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeOrderHistoryModal() {
+    const modal = document.getElementById('orderHistoryModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function reorderPreviousOrder(historyIdx) {
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem('b2b_order_history')) || [];
+    } catch(e) {}
+    const order = history[historyIdx];
+    if (!order || !order.items) return;
+
+    cart = {};
+    order.items.forEach(it => {
+        const prod = productByCode[it.code];
+        if (prod) {
+            cart[it.code] = { prod: prod, qty: it.qty };
+        }
+    });
+
+    updateCartUI();
+    closeOrderHistoryModal();
+    openCartModal();
+    showToast('🎉 تم استرجاع الطلبية بالكامل إلى السلة بنجاح!');
+}
+
+// -------------------------------------------------------------
+// 8. Camera Barcode Scanner System
+// -------------------------------------------------------------
+let html5QrCodeScanner = null;
+
+function openBarcodeScanner() {
+    const modal = document.getElementById('barcodeScannerModal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    const feedback = document.getElementById('scannerFeedback');
+
+    if (typeof Html5Qrcode !== 'undefined') {
+        html5QrCodeScanner = new Html5Qrcode("scannerReader");
+        const config = { fps: 10, qrbox: { width: 260, height: 160 } };
+        html5QrCodeScanner.start(
+            { facingMode: "environment" },
+            config,
+            (decodedText) => {
+                // Success
+                if (navigator.vibrate) navigator.vibrate(80);
+                closeBarcodeScanner();
+                quickSearchCode(decodedText);
+            },
+            (error) => {
+                // Continuous scanning
+            }
+        ).catch(err => {
+            console.warn('Camera start error:', err);
+            if (feedback) feedback.textContent = 'تعذر فتح الكاميرا (يرجى السماح بالوصول للكاميرا أو كتابة الكود يدوياً)';
+        });
+    } else {
+        if (feedback) feedback.textContent = 'اكتب الباركود أو الكود في الخانة بالأسفل للبحث الفوري:';
+        document.getElementById('manualBarcodeInput')?.focus();
+    }
+}
+
+function closeBarcodeScanner() {
+    if (html5QrCodeScanner) {
+        html5QrCodeScanner.stop().then(() => {
+            html5QrCodeScanner.clear();
+            html5QrCodeScanner = null;
+        }).catch(() => {
+            html5QrCodeScanner = null;
+        });
+    }
+    const modal = document.getElementById('barcodeScannerModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function handleManualBarcodeSearch() {
+    const input = document.getElementById('manualBarcodeInput');
+    const val = input ? input.value.trim() : '';
+    if (val) {
+        closeBarcodeScanner();
+        quickSearchCode(val);
+    }
+}
+
+// -------------------------------------------------------------
+// 9. 1-Click Social Promo Card Generator (HTML5 Canvas 1080x1080)
+// -------------------------------------------------------------
+let currentPromoProduct = null;
+
+function openPromoCardModal(code) {
+    const prod = productByCode[code];
+    if (!prod) return;
+    currentPromoProduct = prod;
+
+    const modal = document.getElementById('promoCardModal');
+    if (!modal) return;
+
+    const priceInput = document.getElementById('promoCustomPrice');
+    const shopInput = document.getElementById('promoCustomShop');
+    const phoneInput = document.getElementById('promoCustomPhone');
+    const badgeInput = document.getElementById('promoCustomBadge');
+
+    if (priceInput) priceInput.value = prod.user_price || 0;
+    if (shopInput) shopInput.value = localStorage.getItem('b2b_shop_name') || '2B المعتمد';
+    if (phoneInput) phoneInput.value = localStorage.getItem('b2b_shop_phone') || '';
+    if (badgeInput) badgeInput.value = '🔥 متوفر الآن بأفضل سعر';
+
+    modal.style.display = 'flex';
+    drawPromoCanvas();
+}
+
+function closePromoCardModal() {
+    const modal = document.getElementById('promoCardModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function drawPromoCanvas() {
+    const canvas = document.getElementById('promoCanvas');
+    if (!canvas || !currentPromoProduct) return;
+    const ctx = canvas.getContext('2d');
+    const p = currentPromoProduct;
+
+    const price = document.getElementById('promoCustomPrice')?.value || p.user_price;
+    const shopName = document.getElementById('promoCustomShop')?.value || '2B Official Store';
+    const phone = document.getElementById('promoCustomPhone')?.value || '';
+    const badgeText = document.getElementById('promoCustomBadge')?.value || 'عرض خاص ومميز';
+
+    // 1080x1080 Square Resolution
+    ctx.clearRect(0, 0, 1080, 1080);
+
+    // Background Gradient
+    const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
+    bgGrad.addColorStop(0, '#0f172a');
+    bgGrad.addColorStop(0.5, '#1e293b');
+    bgGrad.addColorStop(1, '#090d16');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1080, 1080);
+
+    // Top Header Ribbon
+    ctx.fillStyle = '#f37021';
+    ctx.fillRect(0, 0, 1080, 110);
+
+    // Header Shop Name & Phone
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 42px Cairo, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(shopName, 1020, 72);
+
+    if (phone) {
+        ctx.font = 'bold 32px Cairo, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('📞 ' + phone, 60, 70);
+    }
+
+    // Badge Banner Under Header
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.roundRect(140, 140, 800, 60, 30);
+    ctx.fill();
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 30px Cairo, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(badgeText, 540, 182);
+
+    // Product Card Center Frame
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.roundRect(140, 230, 800, 480, 24);
+    ctx.fill();
+
+    // Brand Tag on Product Card
+    ctx.fillStyle = '#0284c7';
+    ctx.beginPath();
+    ctx.roundRect(170, 260, 180, 44, 10);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 24px Cairo, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.brand || '2B', 260, 292);
+
+    // SKU Code
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 22px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('SKU: ' + p.code, 900, 292);
+
+    // Draw Product Image
+    const imgObj = new Image();
+    imgObj.crossOrigin = 'anonymous';
+    imgObj.onload = function() {
+        // Center image inside frame
+        ctx.drawImage(imgObj, 290, 310, 500, 380);
+        continueDrawingText();
+    };
+    imgObj.onerror = function() {
+        // Fallback text if image fails
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 40px Cairo, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.brand + ' ' + p.code, 540, 500);
+        continueDrawingText();
+    };
+    imgObj.src = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
+
+    function continueDrawingText() {
+        // Product Name (Arabic)
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 36px Cairo, sans-serif';
+        ctx.textAlign = 'center';
+        const nameText = p.name_ar || p.name || '';
+        // Wrap text if long
+        wrapText(ctx, nameText, 540, 760, 920, 46);
+
+        // Price Badge Ribbon
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.roundRect(240, 840, 600, 100, 20);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 46px Cairo, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`السعر: ${Number(price).toLocaleString()} ج.م`, 540, 908);
+
+        // Footer Guarantee Note
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 24px Cairo, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('ضمان رسمي أصلية 100% | للطلب الفوري تواصل معنا عبر واتساب', 540, 1000);
+    }
+
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        let currentY = y;
+        let linesCount = 0;
+        for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = context.measureText(testLine);
+            if (metrics.width > maxWidth && n > 0) {
+                context.fillText(line, x, currentY);
+                line = words[n] + ' ';
+                currentY += lineHeight;
+                linesCount++;
+                if (linesCount >= 2) break; // max 2 lines
+            } else {
+                line = testLine;
+            }
+        }
+        if (linesCount < 2) {
+            context.fillText(line, x, currentY);
+        }
+    }
+}
+
+function downloadPromoCard() {
+    const canvas = document.getElementById('promoCanvas');
+    if (!canvas || !currentPromoProduct) return;
+    const link = document.createElement('a');
+    link.download = `Offer_${currentPromoProduct.code}_${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('📥 تم تحميل كارت العرض بجودة عالية (PNG)!');
+}
+
+function sharePromoCard() {
+    const canvas = document.getElementById('promoCanvas');
+    if (!canvas || !currentPromoProduct) return;
+    canvas.toBlob((blob) => {
+        if (!blob) return;
+        const file = new File([blob], `Offer_${currentPromoProduct.code}.png`, { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+                files: [file],
+                title: currentPromoProduct.name,
+                text: `عرض مميز على ${currentPromoProduct.name} - متوفر الآن!`
+            }).catch(() => {});
+        } else {
+            downloadPromoCard();
+            const msg = `عرض مميز على ${currentPromoProduct.brand} - ${currentPromoProduct.name} بسعر ${currentPromoProduct.user_price} ج.م!
+للطلب والمعاينة: ${getAppUrl()}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    });
+}
+
+// -------------------------------------------------------------
+// 10. Product Modal & Lightbox
+// -------------------------------------------------------------
 let currentModalProd = null;
 
 function openProductModal(code) {
@@ -2622,12 +3610,7 @@ function shareSingleProductWhatsApp() {
     const p = currentModalProd;
     const price = isClientMode ? p.user_price : p.dealer_price;
     const priceLabel = isClientMode ? 'سعر البيع' : 'سعر الجملة للتاجر';
-    const text = `صنف من كتالوج 2B لعام 2026:
-*${p.brand} - ${p.name}*
-كود الصنف: ${p.code}
-${priceLabel}: ${price.toLocaleString()} ج.م
-للاطلاع على الكتالوج الكامل والطلب:
-${getAppUrl()}`;
+    const text = `صنف من كتالوج 2B لعام 2026:\n*${p.brand} - ${p.name}*\nكود الصنف: ${p.code}\n${priceLabel}: ${price.toLocaleString()} ج.م\nللاطلاع على الكتالوج الكامل والطلب:\n${getAppUrl()}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
@@ -2642,7 +3625,9 @@ function closeImgModal() {
     document.getElementById('imgModal').style.display = 'none';
 }
 
-// PWA Support
+// -------------------------------------------------------------
+// 11. PWA & Offline Support
+// -------------------------------------------------------------
 function initPwa() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -2667,7 +3652,15 @@ function initPwa() {
     });
 }
 
-// QR & Share
+function setupNetworkStatusListener() {
+    window.addEventListener('offline', () => {
+        showToast('⚡ وضع العمل دون إنترنت: الكتالوج متاح بالكامل على جهازك');
+    });
+    window.addEventListener('online', () => {
+        showToast('🌐 تم الاتصال بالإنترنت');
+    });
+}
+
 function getAppUrl() {
     if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
         return window.location.href.split('#')[0];
@@ -2699,6 +3692,29 @@ function shareViaWhatsApp() {
     const url = getAppUrl();
     const msg = `السلام عليكم ورحمة الله، يمكنك فتح كتالوج وأسعار منتجات 2B لعام 2026 والطلب مباشرة من هاتفك عبر الرابط:\n${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function openInstallModal() {
+    const modal = document.getElementById('installModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeInstallModal() {
+    const modal = document.getElementById('installModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function executePwaInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                showToast('🎉 جاري تثبيت التطبيق...');
+            }
+            deferredPrompt = null;
+            closeInstallModal();
+        });
+    }
 }
 
 // Mobile Bottom Nav actions
@@ -2772,6 +3788,7 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
 </script>
 </body>
 </html>
