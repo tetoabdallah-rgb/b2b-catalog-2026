@@ -1,5 +1,5 @@
 // Service Worker - 2B Catalog 2026
-const CACHE_NAME = 'catalog-2026-v4';
+const CACHE_NAME = 'catalog-2026-v5';
 const STATIC_ASSETS = [
   './',
   './index.html',

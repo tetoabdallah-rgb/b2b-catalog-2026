@@ -540,6 +540,16 @@
             background: #e0f2fe;
             padding: 2px 7px;
             border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .card-code:hover {
+            background: #bae6fd;
+            color: #0369a1;
+            transform: translateY(-1px);
         }
         .card-cat-tag {
             font-size: 0.7rem;
@@ -1089,7 +1099,7 @@
     <div class="filter-panel">
         <div class="search-row">
             <div class="search-input-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث باسم الصنف، كود الـ SKU، الماركة، أو المواصفات..." oninput="onSearchInput(this)">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث بكود الصنف SKU (مثال: 005 أو 868 أو DC-00-5)، الاسم، أو الماركة..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="onSearchInput(this)">
                 <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()">✕</button>
             </div>
             <select id="brandSelect" class="select-filter" onchange="onBrandSelectChange(this.value)">
@@ -1402,10 +1412,88 @@ function esc(str) {
 
 function showToast(msg) {
     const el = document.getElementById('toastMsg');
+    if (!el) return;
     el.textContent = msg;
     el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 2400);
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.style.display = 'none'; }, 2400);
 }
+
+// -------------------------------------------------------------
+// Advanced Arabic & Code Normalization System
+// -------------------------------------------------------------
+function normalizeText(text) {
+    if (text === null || text === undefined) return '';
+    let s = String(text);
+    // Remove invisible unicode characters (LTR, RTL, zero-width, BOM, non-breaking spaces)
+    s = s.replace(/[\u200B-\u200F\u202A-\u202E\uFEFF\u00A0]/g, ' ');
+    // Convert Eastern Arabic digits ٠١٢٣٤٥٦٧٨٩ to 0123456789
+    const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
+    for (let i = 0; i < arabicDigits.length; i++) {
+        s = s.split(arabicDigits[i]).join(String(i));
+    }
+    // Normalize Arabic letters
+    s = s.replace(/[أإآٱ]/g, 'ا')
+         .replace(/ة/g, 'ه')
+         .replace(/ى/g, 'ي')
+         .replace(/[ؤئ]/g, 'ء')
+         // Strip Arabic tashkeel / diacritics
+         .replace(/[\u064B-\u065F\u0670]/g, '')
+         // Strip tatweel
+         .replace(/ـ/g, '');
+    return s.toLowerCase().trim();
+}
+
+function cleanCode(codeStr) {
+    const s = normalizeText(codeStr);
+    // Keep only alphanumeric characters (a-z, 0-9)
+    return s.replace(/[^a-z0-9]/g, '');
+}
+
+const SEARCH_SYNONYMS = {
+    'بلوتوث': ['bluetooth'],
+    'وايرلس': ['wireless'],
+    'لاسلكي': ['wireless'],
+    'لاسلكى': ['wireless'],
+    'سلكي': ['wired'],
+    'سلكى': ['wired'],
+    'يو اس بي': ['usb'],
+    'يو اس بى': ['usb'],
+    'تايب سي': ['type-c', 'type c', 'typec'],
+    'تايب سى': ['type-c', 'type c', 'typec'],
+    'مايكرو': ['micro'],
+    'لابتوب': ['laptop'],
+    'باور بانك': ['power bank', 'powerbank'],
+    'باوربانك': ['power bank', 'powerbank'],
+    'ايفون': ['iphone', 'lightning', 'apple'],
+    'سامسونج': ['samsung'],
+    'كونفرتر': ['converter', 'adapter'],
+    'محول': ['converter', 'adapter'],
+    'سويتش': ['switch'],
+    'كابل': ['cable'],
+    'كيبل': ['cable'],
+    'ماوس': ['mouse'],
+    'فارة': ['mouse'],
+    'كيبورد': ['keyboard'],
+    'لوحة مفاتيح': ['keyboard'],
+    'سماعة': ['headphone', 'earphone', 'headset', 'airpods'],
+    'سماعه': ['headphone', 'earphone', 'headset', 'airpods'],
+    'شاحن': ['charger', 'adapter'],
+    'شواحن': ['charger'],
+    'جراب': ['case', 'sleeve', 'bag'],
+    'شنطة': ['bag', 'case', 'backpack'],
+    'حقيبة': ['bag', 'case', 'backpack'],
+    'فلاشة': ['flash', 'drive'],
+    'فلاشه': ['flash', 'drive'],
+    'وصلة': ['adapter', 'cable', 'hub'],
+    'وصله': ['adapter', 'cable', 'hub'],
+    'موزع': ['hub'],
+    'هب': ['hub'],
+    'شاشة': ['screen', 'display', 'protector'],
+    'شاشه': ['screen', 'display', 'protector'],
+    'قاعدة': ['stand', 'dock'],
+    'حامل': ['stand', 'holder']
+};
 
 // Global Products Data & Product Index Lookup
 let products = [];
@@ -1413,16 +1501,35 @@ let productByCode = {};
 let brandCountsCache = {};
 let categoryCountsCache = {};
 
-try {
-    const rawJson = document.getElementById('catalogData').textContent;
-    products = JSON.parse(rawJson);
+function indexProducts() {
+    productByCode = {};
+    brandCountsCache = {};
+    categoryCountsCache = {};
     products.forEach(p => {
         productByCode[p.code] = p;
         const b = (p.brand || 'Generic').trim();
         brandCountsCache[b] = (brandCountsCache[b] || 0) + 1;
         const c = (p.category_en || 'Other Accessories').trim();
         categoryCountsCache[c] = (categoryCountsCache[c] || 0) + 1;
+
+        // Fast search indexing
+        p._norm_code = normalizeText(p.code || '');
+        p._clean_code = cleanCode(p.code || '');
+        const p_name = normalizeText(p.name || '');
+        const p_name_ar = normalizeText(p.name_ar || '');
+        const p_name_en = normalizeText(p.name_en || '');
+        const p_brand = normalizeText(p.brand || '');
+        const p_cat_ar = normalizeText(p.category_ar || '');
+        const p_cat_en = normalizeText(p.category_en || '');
+        const p_class = normalizeText(p.item_class || '');
+        p._searchable = `${p._clean_code} ${p._norm_code} ${p_name} ${p_name_ar} ${p_name_en} ${p_brand} ${p_cat_ar} ${p_cat_en} ${p_class}`;
     });
+}
+
+try {
+    const rawJson = document.getElementById('catalogData').textContent;
+    products = JSON.parse(rawJson);
+    indexProducts();
 } catch(e) {
     console.error('Failed to parse products JSON:', e);
 }
@@ -1500,6 +1607,7 @@ let deferredPrompt = null;
 const PAGE_SIZE = 36;
 let currentFilteredList = [];
 let renderedCount = 0;
+let lastSearchQuery = '';
 
 function init() {
     updateLangButtonsUI();
@@ -1508,11 +1616,13 @@ function init() {
         return;
     }
 
+    indexProducts();
     renderBrandPills();
     renderDepartmentPills();
     populateBrandSelect();
     applyFiltersAndRender();
     initPwa();
+    setupSearchListeners();
 }
 
 function getSortedBrands() {
@@ -1522,6 +1632,7 @@ function getSortedBrands() {
 function renderBrandPills() {
     const brands = getSortedBrands();
     const container = document.getElementById('brandPillsBar');
+    if (!container) return;
     
     let html = `
         <button class="brand-pill ${currentBrand === '' ? 'active' : ''}" data-brand="" onclick="selectBrand('')">
@@ -1546,6 +1657,7 @@ function renderBrandPills() {
 
 function renderDepartmentPills() {
     const container = document.getElementById('deptPillsBar');
+    if (!container) return;
     let html = '';
     DEPARTMENTS.forEach(d => {
         let count = products.length;
@@ -1567,6 +1679,7 @@ function renderDepartmentPills() {
 function populateBrandSelect() {
     const brands = getSortedBrands();
     const sel = document.getElementById('brandSelect');
+    if (!sel) return;
     sel.innerHTML = '<option value="">جميع الماركات (' + brands.length + ')</option>';
     brands.forEach(b => {
         const opt = document.createElement('option');
@@ -1585,16 +1698,16 @@ function switchMainGrouping(mode) {
     const deptBar = document.getElementById('deptPillsBar');
 
     if (mode === 'brands') {
-        btnBr.classList.add('active', 'brand-active');
-        btnCat.classList.remove('active');
-        brandBar.style.display = 'flex';
-        deptBar.style.display = 'none';
+        if (btnBr) btnBr.classList.add('active', 'brand-active');
+        if (btnCat) btnCat.classList.remove('active');
+        if (brandBar) brandBar.style.display = 'flex';
+        if (deptBar) deptBar.style.display = 'none';
         showToast('🏷️ تم تفعيل نظام ترتيب البراندات');
     } else {
-        btnCat.classList.add('active');
-        btnBr.classList.remove('active', 'brand-active');
-        deptBar.style.display = 'flex';
-        brandBar.style.display = 'none';
+        if (btnCat) btnCat.classList.add('active');
+        if (btnBr) btnBr.classList.remove('active', 'brand-active');
+        if (deptBar) deptBar.style.display = 'flex';
+        if (brandBar) brandBar.style.display = 'none';
         showToast('📂 تم تفعيل نظام ترتيب الأقسام');
     }
     applyFiltersAndRender();
@@ -1639,21 +1752,86 @@ function resetAllFilters() {
     applyFiltersAndRender();
 }
 
+// Reset brand/category filters but KEEP the search query
+function resetFiltersKeepSearch() {
+    currentBrand = '';
+    currentCategory = 'ALL';
+    currentDealFilter = 'ALL';
+    const sel = document.getElementById('brandSelect');
+    if (sel) sel.value = '';
+    document.querySelectorAll('.deal-btn').forEach(b => b.classList.remove('active'));
+    const dealBtns = document.querySelectorAll('.deal-btn');
+    if (dealBtns.length > 0) dealBtns[0].classList.add('active');
+    renderBrandPills();
+    renderDepartmentPills();
+    applyFiltersAndRender();
+    showToast('✨ تم إلغاء الفلاتر والبحث في الكتالوج بالكامل');
+}
+
+// Instant Search with Code Click
+function quickSearchCode(code) {
+    const sInput = document.getElementById('searchInput');
+    if (sInput && code) {
+        sInput.value = code;
+        const clrBtn = document.getElementById('clearSearchBtn');
+        if (clrBtn) clrBtn.style.display = 'flex';
+        // Auto reset brand filter to show across all brands
+        currentBrand = '';
+        currentCategory = 'ALL';
+        const sel = document.getElementById('brandSelect');
+        if (sel) sel.value = '';
+        renderBrandPills();
+        renderDepartmentPills();
+        applyFiltersAndRender();
+        sInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        try {
+            navigator.clipboard.writeText(code);
+            showToast(`📋 تم نسخ وبحث الكود: ${code}`);
+        } catch(e) {
+            showToast(`🔍 تم البحث بالكود: ${code}`);
+        }
+    }
+}
+
 // Debounce search for speed
 let searchDebounceTimer = null;
 function onSearchInput(input) {
-    document.getElementById('clearSearchBtn').style.display = input.value.trim() ? 'flex' : 'none';
+    const val = input ? input.value : (document.getElementById('searchInput')?.value || '');
+    const clrBtn = document.getElementById('clearSearchBtn');
+    if (clrBtn) clrBtn.style.display = val.trim() ? 'flex' : 'none';
     clearTimeout(searchDebounceTimer);
     searchDebounceTimer = setTimeout(() => {
         applyFiltersAndRender();
-    }, 120);
+    }, 100);
 }
 
 function clearSearch() {
     const input = document.getElementById('searchInput');
-    input.value = '';
-    document.getElementById('clearSearchBtn').style.display = 'none';
+    if (input) input.value = '';
+    const clrBtn = document.getElementById('clearSearchBtn');
+    if (clrBtn) clrBtn.style.display = 'none';
     applyFiltersAndRender();
+    if (input) input.focus();
+}
+
+function setupSearchListeners() {
+    const sInput = document.getElementById('searchInput');
+    if (!sInput) return;
+    sInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clearTimeout(searchDebounceTimer);
+            applyFiltersAndRender();
+            sInput.blur();
+        }
+    });
+    sInput.addEventListener('paste', () => {
+        setTimeout(() => {
+            onSearchInput(sInput);
+        }, 30);
+    });
+    sInput.addEventListener('change', () => onSearchInput(sInput));
+    sInput.addEventListener('search', () => onSearchInput(sInput));
 }
 
 function setDealFilter(deal, el) {
@@ -1691,31 +1869,101 @@ function togglePresentationMode() {
     applyFiltersAndRender();
 }
 
-// Master Filter & Sort Logic
+// -------------------------------------------------------------
+// Master Filter & Smart Search Logic
+// -------------------------------------------------------------
+let globalAlternativesCount = 0;
+
 function applyFiltersAndRender() {
-    const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+    const sInput = document.getElementById('searchInput');
+    const rawSearch = (sInput ? sInput.value : '') || '';
+    lastSearchQuery = rawSearch.trim();
+    const normSearch = normalizeText(rawSearch);
+    const cleanSearchQuery = cleanCode(rawSearch);
     const sort = document.getElementById('sortSelect').value;
 
+    let hasAnyCodeMatch = false;
+
     let filtered = products.filter(p => {
-        if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
-        if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
-        
+        // 1. Check direct SKU / Code match (Exact or partial without hyphens/spaces or with Arabic numbers)
+        let isCodeMatch = false;
+        if (cleanSearchQuery) {
+            if (p._clean_code === cleanSearchQuery) {
+                isCodeMatch = true;
+            } else if (cleanSearchQuery.length >= 2 && p._clean_code.includes(cleanSearchQuery)) {
+                isCodeMatch = true;
+            } else if (p._norm_code && p._norm_code.includes(normSearch)) {
+                isCodeMatch = true;
+            }
+        }
+
+        // Direct code match ALWAYS matches across the entire catalog (overrides brand/category conflicts)
+        if (isCodeMatch) {
+            hasAnyCodeMatch = true;
+            return true;
+        }
+
+        // Deal Filters
         if (currentDealFilter === 'HIGH_MARGIN' && p.margin_pct < 30) return false;
         if (currentDealFilter === 'UNDER_500' && p.dealer_price >= 500) return false;
         if (currentDealFilter === 'PREMIUM' && p.dealer_price < 2000) return false;
-        
-        if (search) {
-            const matchCode = (p.code || '').toLowerCase().includes(search);
-            const matchName = (p.name || '').toLowerCase().includes(search);
-            const matchNameEn = (p.name_en || '').toLowerCase().includes(search);
-            const matchNameAr = (p.name_ar || '').toLowerCase().includes(search);
-            const matchBrand = (p.brand || '').toLowerCase().includes(search);
-            const matchCatEn = (p.category_en || '').toLowerCase().includes(search);
-            const matchCatAr = (p.category_ar || '').toLowerCase().includes(search);
-            if (!matchCode && !matchName && !matchNameEn && !matchNameAr && !matchBrand && !matchCatEn && !matchCatAr) return false;
+
+        // 2. Search Query Handling (Multi-word + Synonyms + Arabic Normalization)
+        if (normSearch) {
+            // Apply category & brand filters for text searches
+            if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
+            if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
+
+            const tokens = normSearch.split(/\s+/).filter(Boolean);
+            const pSearchable = p._searchable || '';
+
+            for (const token of tokens) {
+                const tokenClean = cleanCode(token);
+                if (pSearchable.includes(token) || (tokenClean && p._clean_code.includes(tokenClean))) {
+                    continue;
+                }
+                // Check synonyms
+                let synMatch = false;
+                if (SEARCH_SYNONYMS[token]) {
+                    for (const syn of SEARCH_SYNONYMS[token]) {
+                        if (pSearchable.includes(syn)) {
+                            synMatch = true;
+                            break;
+                        }
+                    }
+                }
+                if (!synMatch) return false;
+            }
+            return true;
         }
+
+        // 3. Normal Browsing (No Search Query)
+        if (currentCategory !== 'ALL' && !matchCategory(p, currentCategory)) return false;
+        if (currentBrand && (p.brand || '').trim().toUpperCase() !== currentBrand.toUpperCase()) return false;
+
         return true;
     });
+
+    // Check if matches exist across all brands if current filter returned 0
+    globalAlternativesCount = 0;
+    if (normSearch && filtered.length === 0 && (currentBrand !== '' || currentCategory !== 'ALL')) {
+        const tokens = normSearch.split(/\s+/).filter(Boolean);
+        globalAlternativesCount = products.filter(p => {
+            const pSearchable = p._searchable || '';
+            for (const token of tokens) {
+                const tokenClean = cleanCode(token);
+                if (pSearchable.includes(token) || (tokenClean && p._clean_code.includes(tokenClean))) continue;
+                let synMatch = false;
+                if (SEARCH_SYNONYMS[token]) {
+                    for (const syn of SEARCH_SYNONYMS[token]) {
+                        if (pSearchable.includes(syn)) { synMatch = true; break; }
+                    }
+                }
+                if (!synMatch) return false;
+            }
+            return true;
+        }).length;
+    }
 
     // Sorting
     if (sort === 'profit_high' && !isClientMode) {
@@ -1738,13 +1986,19 @@ function applyFiltersAndRender() {
     // Update Status Bar
     const statusEl = document.getElementById('filterStatusText');
     const resetBtn = document.getElementById('resetFiltersBtn');
-    const hasFilter = (currentBrand !== '' || currentCategory !== 'ALL' || currentDealFilter !== 'ALL' || search !== '');
-    resetBtn.style.display = hasFilter ? 'block' : 'none';
+    const hasFilter = (currentBrand !== '' || currentCategory !== 'ALL' || currentDealFilter !== 'ALL' || normSearch !== '');
+    if (resetBtn) resetBtn.style.display = hasFilter ? 'block' : 'none';
 
     let filterDesc = `الأصناف المعروضة: <strong>${filtered.length} صنف</strong>`;
-    if (currentBrand) filterDesc += ` للماركة <span class="filter-badge-item">🏷️ ${esc(currentBrand)}</span>`;
-    if (currentCategory !== 'ALL') filterDesc += ` في <span class="filter-badge-item">📂 ${esc(currentCategory)}</span>`;
-    statusEl.innerHTML = filterDesc;
+    if (normSearch) {
+        filterDesc += ` نتيجة البحث عن <span class="filter-badge-item">🔍 "${esc(rawSearch)}"</span>`;
+        if (hasAnyCodeMatch) {
+            filterDesc += ` <span style="background:#10b981; color:white; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:800;">🎯 مطابقة SKU</span>`;
+        }
+    }
+    if (currentBrand && !hasAnyCodeMatch) filterDesc += ` للماركة <span class="filter-badge-item">🏷️ ${esc(currentBrand)}</span>`;
+    if (currentCategory !== 'ALL' && !hasAnyCodeMatch) filterDesc += ` في <span class="filter-badge-item">📂 ${esc(currentCategory)}</span>`;
+    if (statusEl) statusEl.innerHTML = filterDesc;
 
     renderCatalogInitial();
 }
@@ -1753,10 +2007,41 @@ function applyFiltersAndRender() {
 function renderCatalogInitial() {
     const container = document.getElementById('catalogContentContainer');
     const loadMoreWrap = document.getElementById('loadMoreWrap');
+    if (!container) return;
 
     if (!currentFilteredList || currentFilteredList.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px 20px; background: white; border-radius: 14px; border: 1px solid var(--border); color: #64748b; font-size: 1.1rem;">🔍 لا توجد أصناف مطابقة للبحث أو الفلتر المحدد.</div>';
-        loadMoreWrap.style.display = 'none';
+        if (globalAlternativesCount > 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 36px 20px; background: white; border-radius: 14px; border: 1.5px solid #bae6fd; box-shadow: 0 4px 14px rgba(2,132,199,0.08); margin: 10px 0;">
+                    <div style="font-size: 2.2rem; margin-bottom: 8px;">💡</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
+                        لم نجد نتائج مطابقة داخل "${esc(currentBrand || currentCategory)}"
+                    </div>
+                    <div style="color: #0369a1; font-weight: 700; margin-bottom: 18px; font-size: 0.95rem;">
+                        ولكن تم العثور على <strong>${globalAlternativesCount} صنف مطابق</strong> في ماركات وأقسام أخرى!
+                    </div>
+                    <button onclick="resetFiltersKeepSearch()" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none; padding: 11px 22px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transition: transform 0.15s;">
+                        ✨ عرض النتائج في جميع الماركات (${globalAlternativesCount})
+                    </button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <div style="font-size: 2.2rem; margin-bottom: 8px;">🔍</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
+                        لا توجد أصناف مطابقة للبحث
+                    </div>
+                    <div style="color: #64748b; font-size: 0.92rem; margin-bottom: 16px;">
+                        تأكد من كتابة كود الصنف أو الكلمة بشكل صحيح، أو ابحث برقم الكود مباشرة (مثال: <strong>005</strong> أو <strong>868</strong> أو <strong>729</strong>)
+                    </div>
+                    <button onclick="resetAllFilters()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 8px 18px; border-radius: 9px; font-weight: 700; cursor: pointer;">
+                        🔄 إعادة تعيين كل الفلاتر
+                    </button>
+                </div>
+            `;
+        }
+        if (loadMoreWrap) loadMoreWrap.style.display = 'none';
         return;
     }
 
@@ -1798,10 +2083,11 @@ function loadMoreItems() {
 
 function updateLoadMoreButton() {
     const loadMoreWrap = document.getElementById('loadMoreWrap');
+    if (!loadMoreWrap) return;
     const remainingEl = document.getElementById('remainingCount');
     const remaining = currentFilteredList.length - renderedCount;
     if (remaining > 0) {
-        remainingEl.textContent = remaining;
+        if (remainingEl) remainingEl.textContent = remaining;
         loadMoreWrap.style.display = 'block';
     } else {
         loadMoreWrap.style.display = 'none';
@@ -1871,7 +2157,6 @@ function renderCardTitleHtml(p) {
     } else if (descLang === 'en') {
         return `<div class="card-title" dir="ltr" style="text-align:right;">${esc(enName)}</div>`;
     } else {
-        // Both
         return `
             <div class="card-title">${esc(arName)}</div>
             <div class="card-subtitle-en" dir="ltr">${esc(enName)}</div>
@@ -1921,7 +2206,9 @@ function renderSingleCard(p) {
             <div class="card-body">
                 <div>
                     <div class="card-code-row">
-                        <span class="card-code">${esc(p.code)}</span>
+                        <span class="card-code" title="اضغط لنسخ الكود والبحث به" onclick="event.stopPropagation(); quickSearchCode('${esc(p.code)}')">
+                            ${esc(p.code)} <span style="font-size:0.68rem; opacity:0.7;">📋</span>
+                        </span>
                         <span class="card-cat-tag">${esc(p.category_ar || p.category_en)}</span>
                     </div>
                     ${renderCardTitleHtml(p)}
@@ -1970,7 +2257,9 @@ function renderSingleTableRow(p) {
     return `
         <tr onclick="openProductModal('${esc(p.code)}')">
             <td style="text-align:center;"><img class="tbl-thumb" src="${imgSrc}" loading="lazy" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)"></td>
-            <td style="font-weight:800; color:#0284c7; font-family:monospace; font-size:0.86rem;">${esc(p.code)}</td>
+            <td style="font-weight:800; color:#0284c7; font-family:monospace; font-size:0.86rem; cursor:pointer;" title="اضغط لنسخ الكود والبحث به" onclick="event.stopPropagation(); quickSearchCode('${esc(p.code)}')">
+                ${esc(p.code)} 📋
+            </td>
             <td style="font-weight:700;">${esc(p.brand)}</td>
             <td class="tbl-desc">${renderTableDescHtml(p)}</td>
             <td style="font-weight:700; text-align:center;">${(p.user_price || 0).toLocaleString()} ج.م</td>
@@ -1989,105 +2278,106 @@ function renderSingleTableRow(p) {
     `;
 }
 
+// Stepper Adjuster
 function adjustQty(code, delta) {
-    const el = document.getElementById(`qty_${code}`) || document.getElementById(`qty_tbl_${code}`);
-    if (!el) return;
-    let val = parseInt(el.value, 10) || 1;
-    val += delta;
-    if (val < 1) val = 1;
-    el.value = val;
-    const other = document.getElementById(`qty_tbl_${code}`) || document.getElementById(`qty_${code}`);
-    if (other) other.value = val;
+    const inputGrid = document.getElementById(`qty_${code}`);
+    const inputTbl = document.getElementById(`qty_tbl_${code}`);
+    
+    if (inputGrid) {
+        let v = parseInt(inputGrid.value, 10) || 1;
+        v = Math.max(1, v + delta);
+        inputGrid.value = v;
+    }
+    if (inputTbl) {
+        let v = parseInt(inputTbl.value, 10) || 1;
+        v = Math.max(1, v + delta);
+        inputTbl.value = v;
+    }
 }
 
+// Cart Logic
 function addToCartByCode(code) {
-    const prod = productByCode[code];
-    if (!prod) return;
-    const qtyInput = document.getElementById(`qty_${code}`) || document.getElementById(`qty_tbl_${code}`);
-    const qty = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+    const p = productByCode[code];
+    if (!p) return;
+    
+    let qty = 1;
+    const inputGrid = document.getElementById(`qty_${code}`);
+    const inputTbl = document.getElementById(`qty_tbl_${code}`);
+    if (inputGrid) qty = parseInt(inputGrid.value, 10) || 1;
+    else if (inputTbl) qty = parseInt(inputTbl.value, 10) || 1;
 
-    if (cart[code]) {
-        cart[code].qty += qty;
+    if (!cart[code]) {
+        cart[code] = { prod: p, qty: qty };
     } else {
-        cart[code] = { prod: prod, qty: qty };
+        cart[code].qty += qty;
     }
+
     updateCartUI();
-    showToast(`✅ تم إضافة ${qty} قطعة من [${code}]`);
+    showToast(`✅ تمت إضافة ${qty} قطعة من (${p.brand} ${p.code}) إلى الطلبية!`);
 }
 
 function updateCartUI() {
     const keys = Object.keys(cart);
-    const count = keys.reduce((sum, k) => sum + cart[k].qty, 0);
+    const count = keys.reduce((s, k) => s + cart[k].qty, 0);
+    const countEl = document.getElementById('headerCartCount');
+    const mobCountEl = document.getElementById('mobNavCartBadge');
     
-    const cEl = document.getElementById('cartCount');
-    if (cEl) cEl.textContent = count;
-    
-    const mobBadge = document.getElementById('mobCartBadge');
-    if (mobBadge) {
-        mobBadge.textContent = count;
-        mobBadge.style.display = count > 0 ? 'block' : 'none';
-    }
-    
-    const floatingBar = document.getElementById('floatingCartBar');
-    const floatingText = document.getElementById('floatingCartText');
-    if (count > 0) {
-        let totalVal = 0;
-        keys.forEach(k => {
-            const p = cart[k].prod;
-            const price = isClientMode ? p.user_price : p.dealer_price;
-            totalVal += price * cart[k].qty;
-        });
-        floatingText.textContent = `🛒 ${count} صنف بالطلب | ${totalVal.toLocaleString()} ج.م`;
-        floatingBar.classList.add('show');
-    } else {
-        floatingBar.classList.remove('show');
+    if (countEl) countEl.textContent = count;
+    if (mobCountEl) {
+        mobCountEl.textContent = count;
+        mobCountEl.style.display = count > 0 ? 'inline-block' : 'none';
     }
 }
 
 function openCartModal() {
     const modal = document.getElementById('cartModal');
-    const container = document.getElementById('cartItemsList');
+    const itemsContainer = document.getElementById('cartItemsList');
+    const emptyNotice = document.getElementById('cartEmptyNotice');
+    const summaryCard = document.getElementById('cartSummaryCard');
     const keys = Object.keys(cart);
-    
+
     if (keys.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;">السلة فارغة حالياً.</p>';
-        document.getElementById('cartDealerTotal').textContent = '0.00 ج.م';
-        document.getElementById('cartUserTotal').textContent = '0.00 ج.م';
-        document.getElementById('cartProfitTotal').textContent = '+0.00 ج.م';
-        document.getElementById('cartRoiPercent').textContent = '0.0%';
+        itemsContainer.innerHTML = '';
+        emptyNotice.style.display = 'block';
+        summaryCard.style.display = 'none';
     } else {
+        emptyNotice.style.display = 'none';
+        summaryCard.style.display = 'block';
+
         let totalDealer = 0;
         let totalUser = 0;
         let totalProfit = 0;
-        
-        container.innerHTML = keys.map(k => {
+
+        itemsContainer.innerHTML = keys.map(k => {
             const item = cart[k];
             const p = item.prod;
-            const lineDealer = p.dealer_price * item.qty;
-            const lineUser = p.user_price * item.qty;
-            const lineProfit = p.margin * item.qty;
+            const lineDealer = (p.dealer_price || 0) * item.qty;
+            const lineUser = (p.user_price || 0) * item.qty;
+            const lineProfit = lineUser - lineDealer;
+
             totalDealer += lineDealer;
             totalUser += lineUser;
             totalProfit += lineProfit;
-            
-            const priceDisp = isClientMode ? 
-                `${lineUser.toLocaleString()} ج.م` : 
-                `${lineDealer.toLocaleString()} ج.م <span style="font-size:0.75rem; color:#16a34a; font-weight:700;">(+${lineProfit.toLocaleString()} ربح)</span>`;
-            
-            const cartImgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
+
+            const imgSrc = p.img || (p.img_file ? `product_images/${encodeURIComponent(p.img_file)}` : '');
+
             return `
                 <div class="cart-item-row">
-                    <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
-                        <img src="${cartImgSrc}" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}" onerror="handleDynamicImageError(this)" style="width:36px; height:36px; object-fit:contain; border-radius:6px; border:1px solid #e2e8f0; background:white;">
-                        <div style="min-width:0; overflow:hidden;">
-                            <div style="font-weight:700; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.code)} - ${esc(p.brand)}</div>
-                            <div style="font-size:0.74rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(p.name)}</div>
+                    <img src="${imgSrc}" class="cart-item-thumb" onerror="handleDynamicImageError(this)" data-code="${esc(p.code)}" data-brand="${esc(p.brand)}">
+                    <div class="cart-item-info">
+                        <div style="font-weight: 800; font-size: 0.92rem; color: #0f172a;">${esc(p.brand)} - ${esc(p.code)}</div>
+                        <div style="font-size: 0.8rem; color: #64748b; line-height: 1.3;">${esc(p.name_ar || p.name)}</div>
+                        <div style="font-size: 0.82rem; font-weight: 700; color: #0284c7; margin-top: 4px;">
+                            ${isClientMode ? (p.user_price || 0).toLocaleString() + ' ج.م' : (p.dealer_price || 0).toLocaleString() + ' ج.م'} للقطعة
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <input type="number" min="1" value="${item.qty}" data-code="${esc(k)}" style="width:42px; padding:3px; text-align:center; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;" onchange="updateCartItemQty(this.getAttribute('data-code'), this.value)">
-                        <div style="font-weight:800; font-size:0.86rem; min-width:90px; text-align:left;">${priceDisp}</div>
-                        <button data-code="${esc(k)}" style="background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:3px 7px; cursor:pointer;" onclick="removeCartItem(this.getAttribute('data-code'))">✕</button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                        <div class="qty-stepper" style="height: 32px;">
+                            <button class="qty-btn" style="width: 28px; height: 28px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty - 1})">−</button>
+                            <input type="number" class="order-qty-input" style="width: 38px; height: 28px; font-size: 0.85rem;" min="1" value="${item.qty}" onchange="updateCartItemQty('${esc(p.code)}', this.value)">
+                            <button class="qty-btn" style="width: 28px; height: 28px;" onclick="updateCartItemQty('${esc(p.code)}', ${item.qty + 1})">+</button>
+                        </div>
+                        <button class="cart-del-btn" onclick="removeCartItem('${esc(p.code)}')">حذف ✕</button>
                     </div>
                 </div>
             `;
@@ -2237,8 +2527,7 @@ function exportCartExcel() {
     document.body.removeChild(link);
 }
 
-// Lightbox
-
+// Lightbox & Product Modal
 let currentModalProd = null;
 
 function openProductModal(code) {
@@ -2252,7 +2541,6 @@ function openProductModal(code) {
     const codeEl = document.getElementById('pModalCode');
     const catBadge = document.getElementById('pModalCategoryBadge');
     const classBadge = document.getElementById('pModalClassBadge');
-    const nameEl = document.getElementById('pModalName');
     const priceBox = document.getElementById('pModalPriceBox');
     const qtyInput = document.getElementById('pModalQty');
 
@@ -2263,7 +2551,7 @@ function openProductModal(code) {
     imgEl.onerror = function() { handleDynamicImageError(this); };
 
     brandBadge.textContent = prod.brand || '2B';
-    codeEl.textContent = prod.code;
+    codeEl.innerHTML = `${esc(prod.code)} <span style="font-size:0.75rem; opacity:0.75;" title="نسخ الكود">📋</span>`;
     catBadge.textContent = `${prod.icon || '📂'} ${prod.category_ar || prod.category_en}`;
     classBadge.textContent = `التصنيف: ${prod.item_class || 'عام'}`;
     const nameArEl = document.getElementById('pModalNameAr');
@@ -2309,93 +2597,59 @@ function adjustModalQty(delta) {
     const el = document.getElementById('pModalQty');
     if (!el) return;
     let val = parseInt(el.value, 10) || 1;
-    val += delta;
-    if (val < 1) val = 1;
+    val = Math.max(1, val + delta);
     el.value = val;
 }
 
 function addModalProductToCart() {
     if (!currentModalProd) return;
-    const qtyInput = document.getElementById('pModalQty');
-    const qty = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+    const qty = parseInt(document.getElementById('pModalQty').value, 10) || 1;
     const code = currentModalProd.code;
 
-    if (cart[code]) {
-        cart[code].qty += qty;
-    } else {
+    if (!cart[code]) {
         cart[code] = { prod: currentModalProd, qty: qty };
+    } else {
+        cart[code].qty += qty;
     }
-    updateCartUI();
-    showToast(`✅ تم إضافة ${qty} قطعة من [${code}] إلى السلة`);
-    closeProductModal();
-}
 
-function copyModalSku() {
-    if (!currentModalProd) return;
-    navigator.clipboard.writeText(currentModalProd.code).then(() => {
-        showToast(`📋 تم نسخ كود الصنف: ${currentModalProd.code}`);
-    });
+    updateCartUI();
+    showToast(`✅ تمت إضافة ${qty} قطعة من (${currentModalProd.brand} ${currentModalProd.code}) إلى الطلبية!`);
+    closeProductModal();
 }
 
 function shareSingleProductWhatsApp() {
     if (!currentModalProd) return;
     const p = currentModalProd;
     const price = isClientMode ? p.user_price : p.dealer_price;
-    const url = getAppUrl();
-    const msg = `السلام عليكم ورحمة الله، استفسار بخصوص منتج من كتالوج 2B:\n\n` +
-        `🏷️ *الماركة:* ${p.brand}\n` +
-        `📦 *كود الصنف (SKU):* ${p.code}\n` +
-        `📝 *اسم الصنف:* ${p.name}\n` +
-        `💵 *السعر:* ${price.toLocaleString()} ج.م\n\n` +
-        `🔗 رابط الكتالوج المباشر:\n${url}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    const priceLabel = isClientMode ? 'سعر البيع' : 'سعر الجملة للتاجر';
+    const text = `صنف من كتالوج 2B لعام 2026:
+*${p.brand} - ${p.name}*
+كود الصنف: ${p.code}
+${priceLabel}: ${price.toLocaleString()} ج.م
+للاطلاع على الكتالوج الكامل والطلب:
+${getAppUrl()}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-function openLightbox(src) {
-    if (!src || src.includes('svg')) return;
-    document.getElementById('lightboxImg').src = src;
-    document.getElementById('imgModal').style.display = 'flex';
+function openImgModal(src) {
+    const modal = document.getElementById('imgModal');
+    const img = document.getElementById('lightboxImg');
+    img.src = src;
+    modal.style.display = 'flex';
 }
+
 function closeImgModal() {
     document.getElementById('imgModal').style.display = 'none';
 }
 
-// PWA Install & Modal
-function openInstallModal() {
-    const promptBox = document.getElementById('nativeInstallPromptBox');
-    if (deferredPrompt) {
-        promptBox.style.display = 'block';
-    } else {
-        promptBox.style.display = 'none';
-    }
-    document.getElementById('installModal').style.display = 'flex';
-}
-
-function closeInstallModal() {
-    document.getElementById('installModal').style.display = 'none';
-}
-
-function executePwaInstall() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') {
-                showToast('🚀 جاري تثبيت التطبيق...');
-                closeInstallModal();
-            }
-            deferredPrompt = null;
-        });
-    }
-}
-
+// PWA Support
 function initPwa() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=4').then(reg => {
-                reg.update();
-                console.log('SW active with scope:', reg.scope);
-            }).catch(err => {
-                console.warn('SW error:', err);
+            navigator.serviceWorker.register('./sw.js').then((reg) => {
+                console.log('SW Registered!', reg);
+            }).catch((err) => {
+                console.log('SW Register failed:', err);
             });
         });
     }
@@ -2502,14 +2756,7 @@ function handleExcelUpload(event) {
             }
             if (newProducts.length > 0) {
                 products = newProducts;
-                productByCode = {};
-                brandCountsCache = {};
-                categoryCountsCache = {};
-                products.forEach(p => {
-                    productByCode[p.code] = p;
-                    const b = (p.brand || 'Generic').trim();
-                    brandCountsCache[b] = (brandCountsCache[b] || 0) + 1;
-                });
+                indexProducts();
                 showToast(`✅ تم تحديث ${products.length} صنف من شيت الإكسيل!`);
                 init();
             }
