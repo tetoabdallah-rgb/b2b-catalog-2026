@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-11-11T15:40:00",
+  "admin": {
+    "username": "admin",
+    "pin": "admin2026",
+    "name": "إدارة المبيعات 2B B2B"
+  },
+  "hiddenProducts": [],
+  "outOfStockProducts": [],
+  "hiddenBrands": [],
+  "merchants": [
+    {
+      "id": "M101",
+      "name": "أحمد خليل",
+      "shop": "البرنس ستور",
+      "phone": "01011112222",
+      "city": "الجيزة",
+      "pin": "1234",
+      "active": true,
+      "createdAt": "2026-11-11"
+    },
+    {
+      "id": "M102",
+      "name": "محمود حسن",
+      "shop": "تكنو مصر",
+      "phone": "01033334444",
+      "city": "أسيوط",
+      "pin": "1234",
+      "active": true,
+      "createdAt": "2026-11-11"
+    },
+    {
+      "id": "M103",
+      "name": "إبراهيم علي",
+      "shop": "ستار فون",
+      "phone": "01055556666",
+      "city": "سوهاج",
+      "pin": "1234",
+      "active": true,
+      "createdAt": "2026-11-11"
+    }
+  ],
+  "settings": {
+    "whatsappReceiver": "",
+    "minOrderAmount": 0,
+    "allowCustomerPresentationForMerchants": false
+  }
+}
