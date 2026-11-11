@@ -1,6 +1,6 @@
 // Service Worker - 2B Catalog 2026 Enterprise Edition
-// Build Version: 20261111_154911
-const CACHE_NAME = 'catalog-2026-v20261111_154911-live';
+// Build Version: 20261111_173730
+const CACHE_NAME = 'catalog-2026-v20261111_173730-live';
 const STATIC_ASSETS = [
   './',
   './index.html',
